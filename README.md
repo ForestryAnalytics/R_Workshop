@@ -1,1 +1,3 @@
-# GISwithR
+# MakingMapsWithR
+
+- Making Maps with R
