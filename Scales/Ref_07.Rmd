@@ -1,0 +1,106 @@
+pseudo_log_trans Pseudo-log transformation
+#### Description
+A transformation mapping numbers to a signed logarithmic scale with a smooth transition to linear
+scale around 0.
+#### Usage
+pseudo_log_trans(sigma = 1, base = exp(1))
+#### Arguments
+sigma scaling factor for the linear part
+base approximate logarithm base used
+pvalue_format p-values formatter
+#### Description
+Formatter for p-values, adding a symbol "<" for small p-values.
+#### Usage
+pvalue_format(accuracy = 0.001, decimal.mark = ".", add_p = FALSE)
+pvalue(x, accuracy = 0.001, decimal.mark = ".", add_p = FALSE)
+#### Arguments
+accuracy Number to round to.
+decimal.mark The character to be used to indicate the numeric decimal point.
+add_p Add "p=" before the value?
+x A numeric vector of p-values.
+Value
+pvalue_format returns a function with single parameter x, a numeric vector, that returns a character
+vector.
+Range 33
+#### Examples
+p <- c(.50, 0.12, .045, .011, .009, .00002, NA)
+pvalue(p)
+pvalue(p, accuracy = .01)
+pvalue(p, add_p = TRUE)
+custom_function <- pvalue_format(accuracy = .1, decimal.mark = ",")
+custom_function(p)
+Range Mutable ranges.
+#### Description
+Mutable ranges have a two methods (train and reset), and make it possible to build up complete
+ranges with multiple passes.
+#### Usage
+Range
+Format
+An object of class R6ClassGenerator of length 24.
+reciprocal_trans Reciprocal transformation.
+#### Description
+Reciprocal transformation.
+#### Usage
+reciprocal_trans()
+34 rescale
+regular_minor_breaks Minor breaks. Places minor breaks between major breaks.
+#### Description
+Minor breaks. Places minor breaks between major breaks.
+#### Usage
+regular_minor_breaks(reverse = FALSE)
+#### Arguments
+reverse if TRUE, calculates the minor breaks for a reversed scale
+#### Examples
+m <- extended_breaks()(c(1, 10))
+regular_minor_breaks()(m, c(1, 10), n = 2)
+n <- extended_breaks()(c(0, -9))
+regular_minor_breaks(reverse = TRUE)(n, c(0, -9), n = 2)
+rescale Rescale continuous vector to have specified minimum and maximum.
+#### Description
+Rescale continuous vector to have specified minimum and maximum.
+#### Usage
+rescale(x, to, from, ...)
+## S3 method for class 'numeric'
+rescale(x, to = c(0, 1), from = range(x, na.rm =
+TRUE, finite = TRUE), ...)
+## S3 method for class 'dist'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE,
+finite = TRUE), ...)
+## S3 method for class 'logical'
+rescale(x, to = c(0, 1), from = range(x, na.rm =
+TRUE, finite = TRUE), ...)
+rescale_max 35
+## S3 method for class 'POSIXt'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE,
+finite = TRUE), ...)
+## S3 method for class 'Date'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE,
+finite = TRUE), ...)
+## S3 method for class 'integer64'
+rescale(x, to = c(0, 1), from = range(x, na.rm =
+TRUE), ...)
+#### Arguments
+x continuous vector of values to manipulate.
+to output range (numeric vector of length two)
+from input range (vector of length two). If not given, is calculated from the range of
+x
+... other #### Arguments passed on to methods
+#### Examples
+rescale(1:100)
+rescale(runif(50))
+rescale(1)
+rescale_max Rescale numeric vector to have specified maximum.
+#### Description
+Rescale numeric vector to have specified maximum.
+#### Usage
+rescale_max(x, to = c(0, 1), from = range(x, na.rm = TRUE))
+#### Arguments
+x numeric vector of values to manipulate.
+to output range (numeric vector of length two)
+from input range (numeric vector of length two). If not given, is calculated from the
+range of x
+36 rescale_mid
+#### Examples
+rescale_max(1:100)
+rescale_max(runif(50))
+rescale_max(1)
