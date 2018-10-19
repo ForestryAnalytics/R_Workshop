@@ -1,0 +1,149 @@
+
+trans_format Format labels after transformation.
+#### Description
+Format labels after transformation.
+#### Usage
+trans_format(trans, format = scientific_format())
+#### Arguments
+trans transformation to apply
+format additional formatter to apply after transformation
+Value
+a function with single parameter x, a numeric vector, that returns a character vector of list of expressions
+#### Examples
+tf <- trans_format("log10", scientific_format())
+tf(10 ^ 1:6)
+trans_new Create a new transformation object.
+#### Description
+A transformation encapsulates a transformation and its inverse, as well as the information needed
+to create pleasing breaks and labels. The breaks function is applied on the transformed range of the
+range, and it’s expected that the labels function will perform some kind of inverse transformation
+on these breaks to give them labels that are meaningful on the original scale.
+#### Usage
+trans_new(name, transform, inverse, breaks = extended_breaks(),
+minor_breaks = regular_minor_breaks(), format = format_format(),
+domain = c(-Inf, Inf))
+trans_range 45
+#### Arguments
+name transformation name
+transform function, or name of function, that performs the transformation
+inverse function, or name of function, that performs the inverse of the transformation
+breaks default breaks function for this transformation. The breaks function is applied
+to the raw data.
+minor_breaks default minor breaks function for this transformation.
+format default format for this transformation. The format is applied to breaks generated
+to the raw data.
+domain domain, as numeric vector of length 2, over which transformation is valued
+See Also
+asn_trans, atanh_trans, boxcox_trans, date_trans, exp_trans, hms_trans, identity_trans,
+log10_trans, log1p_trans, log2_trans, log_trans, logit_trans, modulus_trans, probability_trans,
+probit_trans, pseudo_log_trans, reciprocal_trans, reverse_trans, sqrt_trans, time_trans
+trans_range Compute range of transformed values.
+#### Description
+Silently drops any ranges outside of the domain of trans.
+#### Usage
+trans_range(trans, x)
+#### Arguments
+trans a transformation object, or the name of a transformation object given as a string.
+x a numeric vector to compute the range of
+46 wrap_format
+viridis_pal Viridis palette
+#### Description
+Viridis palette
+#### Usage
+viridis_pal(alpha = 1, begin = 0, end = 1, direction = 1,
+option = "D")
+#### Arguments
+alpha The alpha transparency, a number in [0,1], see argument alpha in hsv.
+begin The (corrected) hue in [0,1] at which the viridis colormap begins.
+end The (corrected) hue in [0,1] at which the viridis colormap ends.
+direction Sets the order of colors in the scale. If 1, the default, colors are ordered from
+darkest to lightest. If -1, the order of colors is reversed.
+option A character string indicating the colormap option to use. Four options are available:
+"magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D",
+the default option) and "cividis" (or "E").
+#### References
+https://bids.github.io/colormap/
+#### Examples
+show_col(viridis_pal()(10))
+show_col(viridis_pal(direction = -1)(6))
+show_col(viridis_pal(begin = 0.2, end = 0.8)(4))
+show_col(viridis_pal(option = "plasma")(6))
+wrap_format Wrap text to a specified width, adding newlines for spaces if text exceeds
+the width
+#### Description
+Wrap text to a specified width, adding newlines for spaces if text exceeds the width
+#### Usage
+wrap_format(width)
+zero_range 47
+#### Arguments
+width value above which to wrap
+Value
+Function with single parameter x, a character vector, that returns a wrapped character vector
+#### Examples
+wrap_10 <- wrap_format(10)
+wrap_10('A long line that needs to be wrapped')
+zero_range Determine if range of vector is close to zero, with a specified tolerance
+#### Description
+The machine epsilon is the difference between 1.0 and the next number that can be represented by
+the machine. By default, this function uses epsilon * 1000 as the tolerance. First it scales the values
+so that they have a mean of 1, and then it checks if the difference between them is larger than the
+tolerance.
+#### Usage
+zero_range(x, tol = 1000 * .Machine$double.eps)
+#### Arguments
+x numeric range: vector of length 2
+tol A value specifying the tolerance.
+Value
+logical TRUE if the relative difference of the endpoints of the range are not distinguishable from 0.
+#### Examples
+eps <- .Machine$double.eps
+zero_range(c(1, 1 + eps)) # TRUE
+zero_range(c(1, 1 + 99 * eps)) # TRUE
+zero_range(c(1, 1 + 1001 * eps)) # FALSE - Crossed the tol threshold
+zero_range(c(1, 1 + 2 * eps), tol = eps) # FALSE - Changed tol
+# Scaling up or down all the values has no effect since the values
+# are rescaled to 1 before checking against tol
+zero_range(100000 * c(1, 1 + eps)) # TRUE
+zero_range(100000 * c(1, 1 + 1001 * eps)) # FALSE
+zero_range(.00001 * c(1, 1 + eps)) # TRUE
+48 zero_range
+zero_range(.00001 * c(1, 1 + 1001 * eps)) # FALSE
+# NA values
+zero_range(c(1, NA)) # NA
+zero_range(c(1, NaN)) # NA
+# Infinite values
+zero_range(c(1, Inf)) # FALSE
+zero_range(c(-Inf, Inf)) # FALSE
+zero_range(c(Inf, Inf)) # TRUE
+Index
+Topic datasets
+Range, 33
+Topic manip
+rescale, 34
+abs_area, 3
+alpha, 4
+area_pal, 4, 12
+as.trans, 5
+asn_trans, 5, 12, 45
+atanh_trans, 5, 12, 45
+base::cut(), 11
+base::format(), 16, 28, 29, 38
+boxcox_trans, 6, 12, 45
+brewer_pal, 7, 12
+cbreaks, 7
+censor, 8
+col2hcl, 9
+col_bin (col_numeric), 10
+col_factor (col_numeric), 10
+col_numeric, 10
+col_quantile (col_numeric), 10
+colorRamp, 9, 10
+colour_ramp, 9
+comma (number_format), 27
+comma_format (number_format), 27
+ContinuousRange (Range), 33
+cscale, 12
+date_breaks, 13
+date_format, 13
+date_trans, 12, 14, 45
+dichromat_pal, 12, 14
