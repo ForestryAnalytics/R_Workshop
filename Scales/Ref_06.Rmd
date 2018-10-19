@@ -1,0 +1,76 @@
+ordinal_format Ordinal formatter: add ordinal suffixes (-st, -nd, -rd, -th) to numbers.
+#### Description
+ordinal_english(), ordinal_french() and ordinal_spanish() provide rules for computing
+ordinal indicators in English, French and Spanish respectively.
+#### Usage
+ordinal_format(prefix = "", suffix = "", big.mark = " ",
+rules = ordinal_english(), ...)
+ordinal(x, prefix = "", suffix = "", big.mark = " ",
+rules = ordinal_english(), ...)
+ordinal_english()
+ordinal_french()
+ordinal_spanish()
+#### Arguments
+prefix, suffix Symbols to display before and after value.
+big.mark Character used between every 3 digits to separate thousands.
+rules Named list of regular expressions, match in order. Name gives suffix, and value
+specifies which numbers to match.
+... Other arguments passed on to base::format().
+x A numeric vector of positive values to format.
+Value
+A function with single parameter x, a numeric vector, that returns a character vector
+30 parse_format
+Note
+Values in x will be rounded before formating.
+#### Examples
+ordinal_format()(1:10)
+ordinal(1:10)
+# Custom rules for French
+french <- list(
+er = "^1$",
+nd = "^2$",
+e = "."
+)
+ordinal(1:20, rules = french)
+# You can also use directly
+ordinal(1:20, rules = ordinal_french())
+package-scales Generic plot scaling methods
+#### Description
+Generic plot scaling methods
+parse_format Parse a text label to produce expressions for plotmath.
+#### Description
+Parse a text label to produce expressions for plotmath.
+#### Usage
+parse_format()
+Value
+a function with single parameter x, a character vector, that returns a list of expressions
+See Also
+plotmath()
+#### Examples
+parse_format()(c("alpha", "beta", "gamma"))
+pretty_breaks 31
+pretty_breaks Pretty breaks. Uses default R break algorithm as implemented in
+pretty().
+#### Description
+Pretty breaks. Uses default R break algorithm as implemented in pretty().
+#### Usage
+pretty_breaks(n = 5, ...)
+#### Arguments
+n desired number of breaks
+... Other arguments passed on to pretty()
+#### Examples
+pretty_breaks()(1:10)
+pretty_breaks()(1:100)
+pretty_breaks()(as.Date(c("2008-01-01", "2009-01-01")))
+pretty_breaks()(as.Date(c("2008-01-01", "2090-01-01")))
+probability_trans Probability transformation.
+#### Description
+Probability transformation.
+#### Usage
+probability_trans(distribution, ...)
+#### Arguments
+distribution probability distribution. Should be standard R abbreviation so that "p" + distribution
+is a valid probability density function, and "q" + distribution is a valid
+quantile function.
+... Other arguments passed on to distribution and quantile functions
+32 pvalue_format
