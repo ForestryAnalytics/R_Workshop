@@ -1,30 +1,5 @@
-grey_pal Grey scale palette (discrete).
-#### Description
-Grey scale palette (discrete).
-#### Usage
-grey_pal(start = 0.2, end = 0.8)
-#### Arguments
-start grey value at low end of palette
-end grey value at high end of palette
-See Also
-seq_gradient_pal() for continuous version
-#### Examples
-show_col(grey_pal()(25))
-show_col(grey_pal(0, 1)(25))
-hms_trans 21
-hms_trans Transformation for times (class hms).
-#### Description
-Transformation for times (class hms).
-#### Usage
-hms_trans()
-#### Examples
-if (require("hms")) {
-hms <- round(runif(10) * 86400)
-t <- hms_trans()
-t$transform(hms)
-t$inverse(t$transform(hms))
-t$breaks(hms)
-}
+
+
 hue_pal Hue palette (discrete).
 #### Description
 Hue palette (discrete).
