@@ -1,0 +1,152 @@
+cbreaks Compute breaks for continuous scale.
+#### Description
+This function wraps up the components needed to go from a continuous range to a set of breaks and
+labels suitable for display on axes or legends.
+#### Usage
+cbreaks(range, breaks = extended_breaks(),
+labels = scientific_format())
+8 censor
+#### Arguments
+range numeric vector of length 2 giving the range of the underlying data
+breaks either a vector of break values, or a break function that will make a vector of
+breaks when given the range of the data
+labels either a vector of labels (character vector or list of expression) or a format function
+that will make a vector of labels when called with a vector of breaks. Labels
+can only be specified manually if breaks are - it is extremely dangerous to supply
+labels if you don’t know what the breaks will be.
+#### Examples
+cbreaks(c(0, 100))
+cbreaks(c(0, 100), pretty_breaks(3))
+cbreaks(c(0, 100), pretty_breaks(10))
+cbreaks(c(1, 100), log_breaks())
+cbreaks(c(1, 1e4), log_breaks())
+cbreaks(c(0, 100), labels = math_format())
+cbreaks(c(0, 1), labels = percent_format())
+cbreaks(c(0, 1e6), labels = comma_format())
+cbreaks(c(0, 1e6), labels = dollar_format())
+cbreaks(c(0, 30), labels = dollar_format())
+# You can also specify them manually:
+cbreaks(c(0, 100), breaks = c(15, 20, 80))
+cbreaks(c(0, 100), breaks = c(15, 20, 80), labels = c(1.5, 2.0, 8.0))
+cbreaks(c(0, 100), breaks = c(15, 20, 80),
+labels = expression(alpha, beta, gamma))
+censor Censor any values outside of range.
+#### Description
+Censor any values outside of range.
+#### Usage
+censor(x, range = c(0, 1), only.finite = TRUE)
+#### Arguments
+x numeric vector of values to manipulate.
+range numeric vector of length two giving desired output range.
+only.finite if TRUE (the default), will only modify finite values.
+#### Examples
+censor(c(-1, 0.5, 1, 2, NA))
+col2hcl 9
+col2hcl Modify standard R colour in hcl colour space.
+#### Description
+Transforms rgb to hcl, sets non-missing #### Arguments and then backtransforms to rgb.
+#### Usage
+col2hcl(colour, h, c, l, alpha = 1)
+#### Arguments
+colour character vector of colours to be modified
+h new hue
+c new chroma
+l new luminance
+alpha alpha value. Defaults to 1.
+#### Examples
+col2hcl(colors())
+colour_ramp Fast colour interpolation
+#### Description
+Returns a function that maps the interval [0,1] to a set of colours. Interpolation is performed in the
+CIELAB colour space. Similar to colorRamp(space = 'Lab'), but hundreds of times faster, and
+provides results in "#RRGGBB" (or "#RRGGBBAA") character form instead of RGB colour matrices.
+#### Usage
+colour_ramp(colors, na.color = NA, alpha = TRUE)
+#### Arguments
+colors Colours to interpolate; must be a valid argument to grDevices::col2rgb().
+This can be a character vector of "#RRGGBB" or "#RRGGBBAA", colour names
+from grDevices::colors(), or a positive integer that indexes into grDevices::palette().
+na.color The colour to map to NA values (for example, "#606060" for dark grey, or
+"#00000000" for transparent) and values outside of [0,1]. Can itself by NA,
+which will simply cause an NA to be inserted into the output.
+10 col_numeric
+alpha Whether to include alpha transparency channels in interpolation. If TRUE then
+the alpha information is included in the interpolation. The returned colours will
+be provided in "#RRGGBBAA" format when needed, i.e., in cases where the colour
+is not fully opaque, so that the "AA" part is not equal to "FF". Fully opaque
+colours will be returned in "#RRGGBB" format. If FALSE, the alpha information
+is discarded before interpolation and colours are always returned as "#RRGGBB".
+Value
+A function that takes a numeric vector and returns a character vector of the same length with RGB
+or RGBA hex colours.
+See Also
+colorRamp
+col_numeric Colour mapping
+#### Description
+Conveniently maps data values (numeric or factor/character) to colours according to a given palette,
+which can be provided in a variety of formats.
+#### Usage
+col_numeric(palette, domain, na.color = "#808080")
+col_bin(palette, domain, bins = 7, pretty = TRUE,
+na.color = "#808080")
+col_quantile(palette, domain, n = 4, probs = seq(0, 1, length.out = n +
+1), na.color = "#808080")
+col_factor(palette, domain, levels = NULL, ordered = FALSE,
+na.color = "#808080")
+#### Arguments
+palette The colours or colour function that values will be mapped to
+domain The possible values that can be mapped.
+For col_numeric and col_bin, this can be a simple numeric range (e.g. c(0, 100));
+col_quantile needs representative numeric data; and col_factor needs categorical
+data.
+If NULL, then whenever the resulting colour function is called, the x value will
+represent the domain. This implies that if the function is invoked multiple times,
+the encoding between values and colours may not be consistent; if consistency
+is needed, you must provide a non-NULL domain.
+col_numeric 11
+na.color The colour to return for NA values. Note that na.color = NA is valid.
+bins Either a numeric vector of two or more unique cut points or a single number
+(greater than or equal to 2) giving the number of intervals into which the domain
+values are to be cut.
+pretty Whether to use the function pretty() to generate the bins when the argument
+bins is a single number. When pretty = TRUE, the actual number of bins may
+not be the number of bins you specified. When pretty = FALSE, seq() is used
+to generate the bins and the breaks may not be "pretty".
+n Number of equal-size quantiles desired. For more precise control, use the probs
+argument instead.
+probs See stats::quantile(). If provided, the n argument is ignored.
+levels An alternate way of specifying levels; if specified, domain is ignored
+ordered If TRUE and domain needs to be coerced to a factor, treat it as already in the
+correct order
+#### Details
+col_numeric is a simple linear mapping from continuous numeric data to an interpolated palette.
+col_bin also maps continuous numeric data, but performs binning based on value (see the base::cut()
+function).
+col_quantile similarly bins numeric data, but via the stats::quantile() function.
+col_factor maps factors to colours. If the palette is discrete and has a different number of colours
+than the number of factors, interpolation is used.
+The palette argument can be any of the following:
+1. A character vector of RGB or named colours. #### Examples: palette(), c("#000000", "#0000FF", "#FFFFFF"),
+topo.colors(10)
+2. The name of an RColorBrewer palette, e.g. "BuPu" or "Greens".
+3. A function that receives a single value between 0 and 1 and returns a colour. #### Examples:
+colorRamp(c("#000000", "#FFFFFF"), interpolate="spline").
+Value
+A function that takes a single parameter x; when called with a vector of numbers (except for
+col_factor, which expects factors/characters), #RRGGBB colour strings are returned.
+#### Examples
+pal <- col_bin("Greens", domain = 0:100)
+show_col(pal(sort(runif(10, 60, 100))))
+# Exponential distribution, mapped continuously
+show_col(col_numeric("Blues", domain = NULL)(sort(rexp(16))))
+# Exponential distribution, mapped by interval
+show_col(col_bin("Blues", domain = NULL, bins = 4)(sort(rexp(16))))
+# Exponential distribution, mapped by quantile
+12 cscale
+show_col(col_quantile("Blues", domain = NULL)(sort(rexp(16))))
+# Categorical data; by default, the values being coloured span the gamut...
+show_col(col_factor("RdYlBu", domain = NULL)(LETTERS[1:5]))
+# ...unless the data is a factor, without droplevels...
+show_col(col_factor("RdYlBu", domain = NULL)(factor(LETTERS[1:5], levels=LETTERS)))
+# ...or the domain is stated explicitly.
+show_col(col_factor("RdYlBu", levels = LETTERS)(LETTERS[1:5]))
