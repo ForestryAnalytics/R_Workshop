@@ -1,68 +1,5 @@
-dollar_format Currency formatter: round to nearest cent and display dollar sign.
-#### Description
-The returned function will format a vector of values as currency. If accuracy is not specified, values
-are rounded to the nearest cent, and cents are displayed if any of the values has a non-zero cents and
-the largest value is less than largest_with_cents which by default is 100,000.
-#### Usage
-dollar_format(accuracy = NULL, scale = 1, prefix = "$",
-suffix = "", big.mark = ",", decimal.mark = ".", trim = TRUE,
-largest_with_cents = 1e+05, negative_parens = FALSE, ...)
-dollar(x, accuracy = NULL, scale = 1, prefix = "$", suffix = "",
-big.mark = ",", decimal.mark = ".", trim = TRUE,
-largest_with_cents = 1e+05, negative_parens = FALSE, ...)
-#### Arguments
-accuracy Number to round to, NULL for automatic guess.
-scale A scaling factor: x will be multiply by scale before formating (useful to display
-the data on another scale, e.g. in k$).
-prefix, suffix Symbols to display before and after value.
-big.mark Character used between every 3 digits to separate thousands.
-decimal.mark The character to be used to indicate the numeric decimal point.
-trim Logical, if FALSE, values are right-justified to a common width (see base::format()).
-largest_with_cents
-The value that all values of x must be less than in order for the cents to be
-displayed.
-negative_parens
-Should negative values be shown with parentheses?
-... Other arguments passed on to base::format().
-x A numeric vector to format.
-dscale 17
-Value
-A function with single parameter x, a numeric vector, that returns a character vector.
-#### Examples
-dollar_format()(c(-100, 0.23, 1.456565, 2e3))
-dollar_format()(c(1:10 * 10))
-dollar(c(100, 0.23, 1.456565, 2e3))
-dollar(c(1:10 * 10))
-dollar(10^(1:8))
-usd <- dollar_format(prefix = "USD ")
-usd(c(100, -100))
-euro <- dollar_format(prefix = "", suffix = "\u20ac")
-euro(100)
-finance <- dollar_format(negative_parens = TRUE)
-finance(c(-100, 100))
-dscale Discrete scale.
-#### Description
-Discrete scale.
-#### Usage
-dscale(x, palette, na.value = NA)
-#### Arguments
-x vector of discrete values to scale
-palette aesthetic palette to use
-na.value aesthetic to use for missing values
-#### Examples
-with(mtcars, plot(disp, mpg, pch = 20, cex = 3,
-col = dscale(factor(cyl), brewer_pal())))
-18 exp_trans
-expand_range Expand a range with a multiplicative or additive constant.
-#### Description
-Expand a range with a multiplicative or additive constant.
-#### Usage
-expand_range(range, mul = 0, add = 0, zero_width = 1)
-#### Arguments
-range range of data, numeric vector of length 2
-mul multiplicative constant
-add additive constant
-zero_width distance to use if range has zero width
+
+
 exp_trans Exponential transformation (inverse of log transformation).
 #### Description
 Exponential transformation (inverse of log transformation).
@@ -71,6 +8,9 @@ exp_trans(base = exp(1))
 #### Arguments
 base Base of logarithm
 extended_breaks 19
+
+
+
 extended_breaks Extended breaks. Uses Wilkinson’s extended breaks algorithm as implemented
 in the labeling package.
 #### Description
@@ -87,7 +27,7 @@ Labels on Axes, InfoVis 2010.
 #### Examples
 extended_breaks()(1:10)
 extended_breaks()(1:100)
-format_format Format with using any #### Arguments to format().
+format_format Format with using any arguments to format().
 #### Description
 If the breaks have names, they will be used in p#### Reference to formatting the breaks.
 #### Usage
@@ -97,16 +37,3 @@ format_format(...)
 See Also
 format(), format.Date(), format.POSIXct()
 20 grey_pal
-gradient_n_pal Arbitrary colour gradient palette (continuous).
-#### Description
-Arbitrary colour gradient palette (continuous).
-#### Usage
-gradient_n_pal(colours, values = NULL, space = "Lab")
-#### Arguments
-colours vector of colours
-values if colours should not be evenly positioned along the gradient this vector gives
-the position (between 0 and 1) for each colour in the colours vector. See
-rescale() for a convenience function to map an arbitrary range to between
-0 and 1.
-space colour space in which to calculate gradient. Must be "Lab" - other values are
-deprecated.

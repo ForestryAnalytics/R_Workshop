@@ -7,100 +7,98 @@ methods for automatically determining breaks and labels
 for axes and legends.
 License MIT + file LICENSE
 URL https://scales.r-lib.org, https://github.com/r-lib/scales
-BugReports https://github.com/r-lib/scales/issues
-Depends R (>= 3.1)
-Imports labeling, munsell (>= 0.5), R6, RColorBrewer, Rcpp,
-viridisLite
-Suggests dichromat, bit64, covr, hms, testthat (>= 2.0)
-LinkingTo Rcpp
-LazyLoad yes
-RoxygenNote 6.0.1.9000
-Encoding UTF-8
-NeedsCompilation yes
-Author Hadley Wickham [aut, cre],
-RStudio [cph]
-Maintainer Hadley Wickham <hadley@rstudio.com>
-Repository CRAN
-Date/Publication 2018-08-09 10:10:03 UTC
+* BugReports https://github.com/r-lib/scales/issues
+* Depends R (>= 3.1)
+* Imports labeling, munsell (>= 0.5), R6, RColorBrewer, Rcpp, viridisLite
+* Suggests dichromat, bit64, covr, hms, testthat (>= 2.0)
+* LinkingTo Rcpp
+* LazyLoad yes
+* RoxygenNote 6.0.1.9000
+* Encoding UTF-8
+* NeedsCompilation yes
+* Author Hadley Wickham [aut, cre], RStudio [cph]
+* Maintainer Hadley Wickham <hadley@rstudio.com>
+* Repository CRAN
+* Date/Publication 2018-08-09 10:10:03 UTC
 R topics documented:
-abs_area . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
-alpha . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-area_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-as.trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+abs_area       . 3
+alpha       . . . 4
+area_pal       . 4
+as.trans       . 5
 1
 2 R topics documented:
-asn_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-atanh_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-boxcox_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
-brewer_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
-cbreaks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
-censor . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
-col2hcl . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
-colour_ramp . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
-col_numeric . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
-cscale . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
-date_breaks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
-date_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
-date_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
-dichromat_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
-discard . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
-div_gradient_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
-dollar_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
-dscale . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
-expand_range . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
-exp_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
-extended_breaks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
-format_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
-gradient_n_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
-grey_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
-hms_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
-hue_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
-identity_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
-identity_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
-linetype_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
-log1p_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
-log_breaks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
-log_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
-manual_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
-math_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
-muted . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
-number_bytes_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
-number_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
-ordinal_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
-package-scales . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
-parse_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
-pretty_breaks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
-probability_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
-pseudo_log_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
-pvalue_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
-Range . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
-reciprocal_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
-regular_minor_breaks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
-rescale . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+asn_trans       5
+atanh_trans       . 5
+boxcox_trans       6
+brewer_pal       . 7
+cbreaks       . 7
+censor       . . 8
+col2hcl       . . 9
+colour_ramp       . 9
+col_numeric       . 10
+cscale       . . 12
+date_breaks       . 13
+date_format       . 13
+date_trans       14
+dichromat_pal       14
+discard       . . 15
+div_gradient_pal      . . . 15
+dollar_format       16
+dscale       . . 17
+expand_range       18
+exp_trans       18
+extended_breaks      . . . 19
+format_format       19
+gradient_n_pal      . . . . 20
+grey_pal       . 20
+hms_trans       21
+hue_pal       . 21
+identity_pal       . 22
+identity_trans       22
+linetype_pal       . 22
+log1p_trans       . 23
+log_breaks       23
+log_trans       24
+manual_pal       . 24
+math_format       . 24
+muted       . . 25
+number_bytes_format      . 26
+number_format      . . . . 27
+ordinal_format      . . . . 29
+package-scales      . . . . 30
+parse_format       30
+pretty_breaks       31
+probability_trans      . . . 31
+pseudo_log_trans      . . . 32
+pvalue_format       32
+Range       . . 33
+reciprocal_trans      . . . . 33
+regular_minor_breaks      . 34
+rescale       . . 34
 abs_area 3
-rescale_max . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
-rescale_mid . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
-rescale_none . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
-rescale_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
-reverse_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
-scientific_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
-seq_gradient_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
-shape_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
-show_col . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
-sqrt_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
-squish . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
-squish_infinite . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
-time_trans . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
-train_continuous . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
-train_discrete . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
-trans_breaks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
-trans_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
-trans_new . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
-trans_range . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
-viridis_pal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 46
-wrap_format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 46
-zero_range . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
-Index 49
+rescale_max       . 35
+rescale_mid       . 36
+rescale_none       37
+rescale_pal       . 37
+reverse_trans       38
+scientific_format      . . . 38
+seq_gradient_pal      . . . 39
+shape_pal       40
+show_col       40
+sqrt_trans       40
+squish       . . 41
+squish_infinite       41
+time_trans       42
+train_continuous      . . . 42
+train_discrete       43
+trans_breaks       . 43
+trans_format       . 44
+trans_new       44
+trans_range       . 45
+viridis_pal       46
+wrap_format       . 46
+zero_range       47
+
 abs_area Point area palette (continuous), with area proportional to value.
 #### Description
 Point area palette (continuous), with area proportional to value.
@@ -109,18 +107,8 @@ abs_area(max)
 #### Arguments
 max A number representing the maximum size.
 4 area_pal
-alpha Modify colour transparency. Vectorised in both colour and alpha.
-#### Description
-Modify colour transparency. Vectorised in both colour and alpha.
-#### Usage
-alpha(colour, alpha = NA)
-#### Arguments
-colour colour
-alpha new alpha level in [0,1]. If alpha is NA, existing alpha values are preserved.
-#### Examples
-alpha("red", 0.1)
-alpha(colours(), 0.5)
-alpha("red", seq(0, 1, length.out = 10))
+
+
 area_pal Point area palette (continuous).
 #### Description
 Point area palette (continuous).
@@ -129,74 +117,3 @@ area_pal(range = c(1, 6))
 #### Arguments
 range Numeric vector of length two, giving range of possible sizes. Should be greater
 than 0.
-as.trans 5
-as.trans Convert character string to transformer.
-#### Description
-Convert character string to transformer.
-#### Usage
-as.trans(x)
-#### Arguments
-x name of transformer
-asn_trans Arc-sin square root transformation.
-#### Description
-Arc-sin square root transformation.
-#### Usage
-asn_trans()
-atanh_trans Arc-tangent transformation.
-#### Description
-Arc-tangent transformation.
-#### Usage
-atanh_trans()
-6 boxcox_trans
-boxcox_trans Box-Cox & modulus transformations.
-#### Description
-The Box-Cox transformation is a flexible transformation, often used to transform data towards
-normality. The modulus transformation generalises Box-Cox to also work with negative values.
-#### Usage
-boxcox_trans(p, offset = 0)
-modulus_trans(p, offset = 1)
-#### Arguments
-p Transformation exponent, .
-offset Constant offset. 0 for Box-Cox type 1, otherwise any non-negative constant
-(Box-Cox type 2). modulus_trans() sets the default to 1.
-#### Details
-The Box-Cox power transformation (type 1) requires strictly positive values and takes the following
-form for y > 0:
-y() =
-y 􀀀 1
-
-When y = 0, the natural log transform is used.
-The modulus transformation implements a generalisation of the Box-Cox transformation that works
-for data with both positive and negative values. The equation takes the following forms, when
-y != 0 :
-y() = sign(y) 
-(jyj + 1) 􀀀 1
-
-and when y = 0:
-y() = sign(y)  ln(jyj + 1)
-#### References
-Box, G. E., & Cox, D. R. (1964). An analysis of transformations. Journal of the Royal Statistical
-Society. Series B (Methodological), 211-252. https://www.jstor.org/stable/2984418
-John, J. A., & Draper, N. R. (1980). An alternative family of transformations. Applied Statistics,
-190-197. http://www.jstor.org/stable/2986305
-brewer_pal 7
-brewer_pal Colour Brewer palette (discrete).
-#### Description
-Colour Brewer palette (discrete).
-#### Usage
-brewer_pal(type = "seq", palette = 1, direction = 1)
-#### Arguments
-type One of seq (sequential), div (diverging) or qual (qualitative)
-palette If a string, will use that named palette. If a number, will index into the list of
-palettes of appropriate type
-direction Sets the order of colours in the scale. If 1, the default, colours are as output by
-RColorBrewer::brewer.pal(). If -1, the order of colours is reversed.
-#### References
-http://colorbrewer2.org
-#### Examples
-show_col(brewer_pal()(10))
-show_col(brewer_pal("div")(5))
-show_col(brewer_pal(palette = "Greens")(5))
-# Can use with gradient_n to create a continous gradient
-cols <- brewer_pal("div")(5)
-show_col(gradient_n_pal(cols)(seq(0, 1, length.out = 30)))
