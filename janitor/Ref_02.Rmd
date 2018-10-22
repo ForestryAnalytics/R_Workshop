@@ -1,0 +1,51 @@
+adorn_pct_formatting Format a data.frame of decimals as percentages.
+#### Description
+Numeric columns get multiplied by 100 and formatted as percentages according to user specifications.
+This function excludes the first column of the input data.frame, assuming that it contains a
+descriptive variable. Other non-numeric columns are also excluded.
+#### Usage 
+<pre><code>
+adorn_pct_formatting(dat, digits = 1, rounding = "half to even",
+affix_sign = TRUE)
+</code></pre> 
+
+#### Arguments
+* ``dat``: a data.frame with decimal values, typically the result of a call to adorn_percentages
+on a tabyl. If given a list of data.frames, this function will apply itself to each
+data.frame in the list (designed for 3-way tabyl lists).
+* ``digits``: how many digits should be displayed after the decimal point?
+rounding method to use for rounding - either "half to even", the base R default method, or
+"half up", where 14.5 rounds up to 15.
+affix_sign should the % sign be affixed to the end?
+Value
+a data.frame with formatted percentages
+#### Examples
+mtcars %>%
+tabyl(am, cyl) %>%
+adorn_percentages("col") %>%
+adorn_pct_formatting()
+adorn_percentages Convert a data.frame of counts to percentages.
+#### Description
+This function excludes the first column of the input data.frame, assuming that it contains a descriptive
+variable. If the input data.frame is not a tabyl, it will convert to one in order to preserve the
+underlying values in the core attribute.
+6 adorn_rounding
+#### Usage <pre><code>
+adorn_percentages(dat, denominator = "row", na.rm = TRUE)
+</code></pre> #### Arguments
+dat a tabyl or other data.frame with a tabyl-like layout. If given a list of data.frames,
+this function will apply itself to each data.frame in the list (designed for 3-way
+tabyl lists).
+denominator the direction to use for calculating percentages. One of "row", "col", or "all".
+na.rm should missing values (including NaN) be omitted from the calculations?
+Value
+Returns a data.frame of percentages, expressed as numeric values between 0 and 1.
+#### Examples
+mtcars %>%
+tabyl(am, cyl) %>%
+adorn_percentages("col")
+# calculates correctly even with totals column and/or row:
+mtcars %>%
+tabyl(am, cyl) %>%
+adorn_totals("row") %>%
+adorn_percentages()
