@@ -1,0 +1,81 @@
+
+clean_names Cleans names of a data.frame.
+#### Description
+Resulting names are unique and consist only of the _ character, numbers, and letters. Capitalization
+preferences can be specified using the case parameter.
+Accented characters are transliterated to ASCII. For example, an "o" with a German umlaut over it
+becomes "o", and the Spanish character "enye" becomes "n".
+#### Usage <pre><code>
+clean_names(dat, case = c("snake", "lower_camel", "upper_camel",
+"screaming_snake", "lower_upper", "upper_lower", "all_caps",
+"small_camel", "big_camel", "old_janitor", "parsed", "mixed"))
+</code></pre> #### Arguments
+dat the input data.frame.
+case The desired target case (default is "snake"), indicated by these possible values:
+* "snake" produces snake_case
+* "lower_camel" or "small_camel" produces lowerCamel
+* "upper_camel" or "big_camel" produces UpperCamel
+* "screaming_snake" or "all_caps" produces ALL_CAPS
+* "lower_upper" produces lowerUPPER
+* "upper_lower" produces UPPERlower
+convert_to_NA 11
+* old_janitor: legacy compatibility option to preserve behavior of clean_names
+prior to addition of the "case" argument(janitor versions <= 0.3.1 ). Provided
+as a quick fix for old scripts broken by the changes to clean_names
+in janitor v1.0.
+* "parsed", "mixed", "none", "internal_parsing": less-common cases
+offered by snakecase::to_any_case. See to_any_case for details.
+Value
+Returns the data.frame with clean names.
+#### Examples
+# not run:
+# clean_names(poorly_named_df)
+# or pipe in the input data.frame:
+# poorly_named_df %>% clean_names()
+# if you prefer camelCase variable names:
+# poorly_named_df %>% clean_names(., "small_camel")
+# not run:
+# library(readxl)
+# readxl("messy_excel_file.xlsx") %>% clean_names()
+convert_to_NA Convert string values to true NA values.
+#### Description
+Converts instances of user-specified strings into NA. Can operate on either a single vector or an entire
+data.frame.
+#### Usage <pre><code>
+convert_to_NA(dat, strings)
+</code></pre> #### Arguments
+dat vector or data.frame to operate on.
+strings character vector of strings to convert.
+Value
+Returns a cleaned object. Can be a vector, data.frame, or tibble::tbl_df depending on the provided
+input.
+12 crosstab
+Warning
+Deprecated, do not use in new code. Use dplyr::na_if() instead.
+See Also
+janitor_deprecated
+crosstab Generate a crosstabulation of two vectors.
+#### Description
+This function is deprecated, use tabyl(dat, var1, var2) instead.
+#### Usage <pre><code>
+crosstab(...)
+## Default S3 method:
+crosstab(vec1, vec2, percent = "none",
+show_na = TRUE, ...)
+## S3 method for class 'data.frame'
+crosstab(.data, ...)
+</code></pre> #### Arguments
+... additional </code></pre> #### Arguments, if calling crosstab on a data.frame.
+vec1 the vector to place on the crosstab column. If supplying a data.frame, this should
+be an unquoted column name.
+vec2 the vector to place on the crosstab row. If supplying a data.frame, this should be
+an unquoted column name.
+percent which grouping to use for percentages, if desired (defaults to "none", which
+returns simple counts). Must be one of "none", "row", "col", or "all".
+show_na a logical value indicating whether counts should be displayed where either variable
+is NA.
+.data (optional) a data.frame, in which case vec1 and vec2 should be unquoted column
+names.
+Value
+Returns a data.frame with the frequencies of the crosstabulated variables.
+excel_numeric_to_date 13
