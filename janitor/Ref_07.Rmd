@@ -10,9 +10,11 @@ remove_empty 15
 remove_empty Remove empty rows and/or columns from a data.frame.
 #### Description
 Removes all rows and/or columns from a data.frame that are composed entirely of NA values.
-#### Usage <pre><code>
+#### Usage 
+<pre><code>
 remove_empty(dat, which = c("rows", "cols"))
-</code></pre> #### Arguments
+</code></pre> 
+#### Arguments
 dat the input data.frame.
 which one of "rows", "cols", or c("rows", "cols"). Where no value of which is
 provided, defaults to removing both empty rows and empty columns, declaring
@@ -22,48 +24,4 @@ Returns the data.frame without its missing rows or columns.
 #### Examples
 # not run:
 # dat %>% remove_empty("rows")
-remove_empty_cols Removes empty columns from a data.frame.
-#### Description
-This function is deprecated, use remove_empty("cols") instead.
-#### Usage <pre><code>
-remove_empty_cols(dat)
-</code></pre> #### Arguments
-dat the input data.frame.
-Value
-Returns the data.frame with no empty columns.
-16 round_half_up
-#### Examples
-# not run:
-# dat %>% remove_empty_cols
-remove_empty_rows Removes empty rows from a data.frame.
-#### Description
-This function is deprecated, use remove_empty("rows") instead.
-#### Usage <pre><code>
-remove_empty_rows(dat)
-</code></pre> #### Arguments
-dat the input data.frame.
-Value
-Returns the data.frame with no empty rows.
-#### Examples
-# not run:
-# dat %>% remove_empty_rows
-round_half_up Round a numeric vector; halves will be rounded up, ala Microsoft
-Excel.
-#### Description
-In base R round(), halves are rounded to even, e.g., 12.5 and 11.5 are both rounded to 12. This
-function rounds 12.5 to 13 (assuming digits = 0). Negative halves are rounded away from zero,
-e.g., -0.5 is rounded to -1.
-This may skew subsequent statistical analysis of the data, but may be desirable in certain contexts.
-This function is implemented exactly from http://stackoverflow.com/a/12688836; see that
-question and comments for discussion of this issue.
-#### Usage <pre><code>
-round_half_up(x, digits = 0)
-row_to_names 17
-</code></pre> #### Arguments
-x a numeric vector to round.
-* ``digits``: how many digits should be displayed after the decimal point?
-#### Examples
-round_half_up(12.5)
-round_half_up(1.125, 2)
-round_half_up(1.125, 1)
-round_half_up(-0.5, 0) # negatives get rounded away from zero
+```
