@@ -1,6 +1,6 @@
-map_fields_q
-Map field values from one column into new derived columns (query
-based, takes name of table).
+## ``map_fields_q``
+
+Map field values from one column into new derived columns (query based, takes name of table).
 
 #### Description 
 
@@ -10,17 +10,16 @@ Map field values from one column into new derived columns (query based, takes na
  <pre><code>
 map_fields_q(dname, cname, mname, my_db, rname)
 </code></pre>
-#### Arguments 
 
-dname name of table to re-map.
-cname name of column to re-map.
-mname name of table of data describing the mapping (cname column is source, derived
-columns are destinations).
-my_db DBI database handle.
-rname name of result table.
-Value
+#### Arguments 
+* dname name of table to re-map.
+* cname name of column to re-map.
+* mname name of table of data describing the mapping (cname column is source, derived columns are destinations).
+* my_db DBI database handle.
+* rname name of result table.
+
+#### Value
 re-mapped tablepivot_to_rowrecs
-13
 
 
 #### Examples 
