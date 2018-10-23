@@ -1,0 +1,79 @@
+pivot_to_rowrecs
+Move values from rows to columns (pivot).
+
+#### Description 
+
+This is a convenience notation for blocks_to_rowrecs. For a tutorial please try vignette('RowsAndColumns', package='
+
+#### Usage 
+ <pre><code>
+pivot_to_rowrecs(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
+rowKeyColumns, ..., sep = NULL, checkNames = TRUE,
+checkKeys = TRUE, strict = FALSE, use_data_table = FALSE)14
+qlook
+</code></pre>
+#### Arguments 
+
+data
+data.frame to work with (must be local, for remote please try moveValuesToColumns*).
+columnToTakeKeysFrom
+character name of column build new column names from.
+columnToTakeValuesFrom
+character name of column to get values from.
+rowKeyColumns character array names columns that should be table keys.
+* ``...``: force later arguments  to bind by name.
+sep character if not null build more detailed column names.
+checkNames logical, if TRUE check names.
+checkKeys logical, if TRUE check keyColumns uniquely identify blocks (required).
+strict logical, if TRUE check control table name forms
+use_data_table logical if TRUE try to use data.table for the pivots.
+Value
+new data.frame with values moved to columns.
+See Also
+unpivot_to_blocks, blocks_to_rowrecs
+
+
+#### Examples 
+```{r}
+d <- data.frame(meas= c('AUC', 'R2'), val= c(0.6, 0.2))
+pivot_to_rowrecs(d,
+columnToTakeKeysFrom= 'meas',
+columnToTakeValuesFrom= 'val',
+rowKeyColumns= c()) %.>%
+print(.)
+qlook
+Quick look at remote data
+
+#### Description 
+
+Quick look at remote data
+
+#### Usage 
+ <pre><code>
+qlook(my_db, tableName, displayRows = 10, countRows = TRUE)rowrecs_to_blocks
+15
+</code></pre>
+#### Arguments 
+
+my_db DBI database handle
+tableName name of table to look at
+displayRows number of rows to sample
+countRows logical, if TRUE return row count.
+Value
+str view of data
+
+
+#### Examples 
+```{r}
+if ( requireNamespace("DBI", quietly = TRUE) &&
+requireNamespace("RSQLite", quietly = TRUE)) {
+my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+DBI::dbWriteTable(my_db,
+'d',
+data.frame(AUC = 0.6, R2 = 0.2),
+overwrite = TRUE,
+temporary = TRUE)
+qlook(my_db, 'd')
+DBI::dbDisconnect(my_db)
+}
+```
