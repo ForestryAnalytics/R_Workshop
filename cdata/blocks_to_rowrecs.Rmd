@@ -39,19 +39,6 @@ temporary = TRUE)
 * tmp_name_source a tempNameGenerator from cdata::mk_tmp_name_source()
 * temporary logical, if TRUE make result temporary.
 
-#### Details 
-
-This is using the theory of "fluid data"n (https://github.com/WinVector/cdata), which in-
-cludes the principle that each data cell has coordinates independent of the storage details 
-and storage detail dependent coordinates (usually row-id, column-id, and group-id) can be re-derived at will
-(the other principle is that there may not be "one true preferred data shape" and many re-shapings
-of data may be needed to match data to different algorithms and methods).
-The controlTable defines the names of each data element in the two notations: the notation of the
-tall table (which is row oriented) and the notation of the wide table (which is column oriented).
-controlTable[ , 1] (the group label) cross colnames(controlTable) (the column labels) are names of
-data cells in the long form. controlTable[ , 2:ncol(controlTable)] (column labels) are names of data
-cells in the wide form. To get behavior similar to tidyr::gather/spread one builds the control table
-by running an appropriate query over the data.
 
 
 
@@ -106,5 +93,20 @@ Some discussion and examples  can be found here: https://winvector.github.io/Flu
 FluidData.html and here https://github.com/WinVector/cdata.
 #### Value
 wide table built by mapping key-grouped tallTable rows to one row per group
-See Also
+
+#### Details 
+
+* This is using the theory of "fluid data"n (https://github.com/WinVector/cdata), which in-
+cludes the principle that each data cell has coordinates independent of the storage details 
+and storage detail dependent coordinates (usually row-id, column-id, and group-id) can be re-derived at will
+(the other principle is that there may not be "one true preferred data shape" and many re-shapings
+of data may be needed to match data to different algorithms and methods).
+* The controlTable defines the names of each data element in the two notations: the notation of the
+tall table (which is row oriented) and the notation of the wide table (which is column oriented).
+controlTable[ , 1] (the group label) cross colnames(controlTable) (the column labels) are names of
+data cells in the long form. controlTable[ , 2:ncol(controlTable)] (column labels) are names of data
+cells in the wide form. To get behavior similar to tidyr::gather/spread one builds the control table
+by running an appropriate query over the data.
+
+### See Also
 build_pivot_control, rowrecs_to_blocks_q
