@@ -1,4 +1,5 @@
 map_fields
+
 Map field values from one column into new derived columns (takes a
 data.frame).
 
@@ -7,18 +8,17 @@ data.frame).
 Map field values from one column into new derived columns (takes a data.frame).
 
 #### Usage 
- <pre><code>
+
+<pre><code>
 map_fields(d, cname, m)
 </code></pre>
+
 #### Arguments 
 
-d name of table to re-map.
-cname name of column to re-map.
-m name of table of data describing the mapping (cname column is source, derived
-columns are destinations).
-Value
-re-mapped table12
-map_fields_q
+* d name of table to re-map.
+* cname name of column to re-map.
+* m name of table of data describing the mapping (cname column is source, derived columns are destinations).
+
 
 
 #### Examples 
@@ -36,3 +36,7 @@ dataset = c("train", "train", "validation", "validation"),
 stringsAsFactors = FALSE)
 map_fields(d, 'what', m)
 ```
+
+#### Value
+re-mapped table12
+map_fields_q
