@@ -1,3 +1,15 @@
+---
+title: "cdata"
+author: "Kevin O'Brien"
+date: "28 October 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(cdata)
+```
+
 ## ``rowrecs_to_blocks``
 Map a set of columns to rows (takes a data.frame).
 

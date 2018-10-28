@@ -1,3 +1,15 @@
+---
+title: "cdata"
+author: "Kevin O'Brien"
+date: "28 October 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(cdata)
+```
+
 ## ``build_pivot_control_q`` 
 
 Build a blocks_to_rowrecs_q() control table that specifies a pivot (query based, takes name of table).
