@@ -18,21 +18,16 @@ sep = NULL)
 
 #### Arguments 
 
-tableName
+* tableName
 Name of table to scan for new column names.
-columnToTakeKeysFrom
+* columnToTakeKeysFrom
 character name of column build new column names from.
-columnToTakeValuesFrom
+* columnToTakeValuesFrom
 character name of column to get values from.
-my_db db handle
-... not used, force later args to be by name
-prefix column name prefix (only used when sep is not NULL)
-sep separator to build complex column names.build_unpivot_control
-9
-Value
-control table
-See Also
-blocks_to_rowrecs_q, build_pivot_control_q
+* my_db db handle
+* ... not used, force later args to be by name
+* prefix column name prefix (only used when sep is not NULL)
+* sep separator to build complex column names.
 
 
 #### Examples 
@@ -55,3 +50,13 @@ print(.)
 DBI::dbDisconnect(my_db)
 }
 ```
+
+
+#### Value
+
+control table
+
+#### See Also
+
+blocks_to_rowrecs_q, build_pivot_control_q
+
