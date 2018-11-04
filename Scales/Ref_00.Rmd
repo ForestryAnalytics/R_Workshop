@@ -98,22 +98,3 @@ trans_range       . 45
 viridis_pal       46
 wrap_format       . 46
 zero_range       47
-
-abs_area Point area palette (continuous), with area proportional to value.
-#### Description
-Point area palette (continuous), with area proportional to value.
-#### Usage
-abs_area(max)
-#### Arguments
-max A number representing the maximum size.
-4 area_pal
-
-
-area_pal Point area palette (continuous).
-#### Description
-Point area palette (continuous).
-#### Usage
-area_pal(range = c(1, 6))
-#### Arguments
-range Numeric vector of length two, giving range of possible sizes. Should be greater
-than 0.
