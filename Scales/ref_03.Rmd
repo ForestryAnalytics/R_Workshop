@@ -1,39 +1,17 @@
-
-
 exp_trans Exponential transformation (inverse of log transformation).
+
 #### Description
+
 Exponential transformation (inverse of log transformation).
+
 #### Usage
+<pre><code>
 exp_trans(base = exp(1))
+</code></pre>
+
 #### Arguments
-base Base of logarithm
-extended_breaks 19
+* ``base``: Base of logarithm
 
 
 
-extended_breaks Extended breaks. Uses Wilkinson’s extended breaks algorithm as implemented
-in the labeling package.
-#### Description
-Extended breaks. Uses Wilkinson’s extended breaks algorithm as implemented in the labeling
-package.
-#### Usage
-extended_breaks(n = 5, ...)
-#### Arguments
-n desired number of breaks
-... Other arguments passed on to labeling::extended()
-#### References
-Talbot, J., Lin, S., Hanrahan, P. (2010) An Extension ofWilkinson’s Algorithm for Positioning Tick
-Labels on Axes, InfoVis 2010.
-#### Examples
-extended_breaks()(1:10)
-extended_breaks()(1:100)
-format_format Format with using any arguments to format().
-#### Description
-If the breaks have names, they will be used in p#### Reference to formatting the breaks.
-#### Usage
-format_format(...)
-#### Arguments
-... Other arguments passed on to format().
-See Also
-format(), format.Date(), format.POSIXct()
-20 grey_pal
+
