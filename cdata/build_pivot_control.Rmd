@@ -27,14 +27,14 @@ temporary = FALSE)
 
 #### Arguments 
 
-* table data.frame to scan for new column names (in-memory data.frame).
-* columnToTakeKeysFrom character name of column build new column names from.
-* columnToTakeValuesFrom character name of column to get values from.
-* ... not used, force later args to be by name
-* prefix column name prefix (only used when sep is not NULL)
-* sep separator to build complex column names.
-* tmp_name_source a tempNameGenerator from cdata::mk_tmp_name_source()
-* temporary logical, if TRUE use temporary tables
+* ``table``: data.frame to scan for new column names (in-memory data.frame).
+* ``columnToTakeKeysFrom``: character name of column build new column names from.
+* ``columnToTakeValuesFrom``: character name of column to get values from.
+* ``...``: not used, force later args to be by name
+* ``prefix``: column name prefix (only used when sep is not NULL)
+* ``sep``: separator to build complex column names.
+* ``tmp_name_source`: a tempNameGenerator from ``cdata::mk_tmp_name_source()``
+* ``temporary``: logical, if TRUE use temporary tables
 
 
 
