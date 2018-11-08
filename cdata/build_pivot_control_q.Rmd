@@ -12,13 +12,12 @@ library(cdata)
 
 ## ``build_pivot_control_q`` 
 
-Build a blocks_to_rowrecs_q() control table that specifies a pivot (query based, takes name of table).
+Build a ``blocks_to_rowrecs_q()`` control table that specifies a pivot (query based, takes name of table).
 
 #### Description 
 
 
-Some discussion and examples   can be found here: https://winvector.github.io/FluidData/
-FluidData.html.
+Some discussion and examples can be found here: https://winvector.github.io/FluidData/FluidData.html.
 
 #### Usage 
 
@@ -30,16 +29,13 @@ sep = NULL)
 
 #### Arguments 
 
-* tableName
-Name of table to scan for new column names.
-* columnToTakeKeysFrom
-character name of column build new column names from.
-* columnToTakeValuesFrom
-character name of column to get values from.
-* my_db db handle
-* ... not used, force later args to be by name
-* prefix column name prefix (only used when sep is not NULL)
-* sep separator to build complex column names.
+* ``tableName``: Name of table to scan for new column names.
+* ``columnToTakeKeysFrom``: character name of column build new column names from.
+* ``columnToTakeValuesFrom``: character name of column to get values from.
+* ``my_db``: db handle
+* ``...``: not used, force later args to be by name
+* ``prefix``: column name prefix (only used when sep is not NULL)
+* ``sep``: separator to build complex column names.
 
 
 #### Examples 
