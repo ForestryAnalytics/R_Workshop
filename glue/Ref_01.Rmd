@@ -1,8 +1,0 @@
-as_glue Coerce object to glue
-Description
-Coerce object to glue
-Usage
-as_glue(x, ...)
-Arguments
-x object to be coerced.
-... further arguments passed to methods.
