@@ -1,4 +1,13 @@
-## ``regular_minor_breaks`` Minor breaks. 
+---
+title: "``regular_minor_breaks`` Minor breaks"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(scales)
+```
+
 Places minor breaks between major breaks.
 
 #### Description

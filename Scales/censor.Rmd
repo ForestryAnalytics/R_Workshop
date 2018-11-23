@@ -1,4 +1,13 @@
-## ``censor`` Censor any values outside of range.
+---
+title: "``censor`` Censor any values outside of range."
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(scales)
+```
+
 
 #### Description
 Censor any values outside of range.
