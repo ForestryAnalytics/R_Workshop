@@ -1,16 +1,13 @@
 ---
-title: "cdata"
-author: "Kevin O'Brien"
-date: "23 November 2018"
+title: "``cscale``: Continuous scale."
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(cdata)
+library(scales)
 ```
-
-## cscale Continuous scale.
+ 
 
 #### Description
 Continuous scale.

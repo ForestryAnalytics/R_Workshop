@@ -1,21 +1,31 @@
-## ``checkColsFormUniqueKeys``
-Check that a set of columns form unique keys.
+---
+title: "``checkColsFormUniqueKeys``Check that a set of columns form unique keys."
+
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(cdata)
+```
 
 #### Description 
 
 For local data.frame only.
 
 #### Usage 
- <pre><code>
-checkColsFormUniqueKeys(data, keyColNames)
 
+<pre><code>
+checkColsFormUniqueKeys(data, keyColNames)
 </code></pre>
+
 #### Arguments 
 
-data data.frame to work with.
-keyColNames character array of column names to check.
-Value
-logical TRUE if the rows of data are unique addressable by the columns named in keyColNames.
+* ``data``: data.frame to work with.
+* ``keyColNames``: character array of column names to check.
+
+#### Value
+* ``logical`` TRUE if the rows of data are unique addressable by the columns named in ***keyColNames***.
 
 
 #### Examples 

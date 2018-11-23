@@ -44,55 +44,7 @@ dichromat_pal       14
 discard       . . 15
 div_gradient_pal      . . . 15
 dollar_format       16
-dscale       . . 17
-expand_range       18
-exp_trans       18
-extended_breaks      . . . 19
-format_format       19
-gradient_n_pal      . . . . 20
-grey_pal       . 20
-hms_trans       21
-hue_pal       . 21
-identity_pal       . 22
-identity_trans       22
-linetype_pal       . 22
-log1p_trans       . 23
-log_breaks       23
-log_trans       24
-manual_pal       . 24
-math_format       . 24
-muted       . . 25
-number_bytes_format      . 26
-number_format      . . . . 27
-ordinal_format      . . . . 29
-package-scales      . . . . 30
-parse_format       30
-pretty_breaks       31
-probability_trans      . . . 31
-pseudo_log_trans      . . . 32
-pvalue_format       32
-Range       . . 33
-reciprocal_trans      . . . . 33
-regular_minor_breaks      . 34
-rescale       . . 34
-abs_area 3
-rescale_max       . 35
-rescale_mid       . 36
-rescale_none       37
-rescale_pal       . 37
-reverse_trans       38
-scientific_format      . . . 38
-seq_gradient_pal      . . . 39
-shape_pal       40
-show_col       40
-sqrt_trans       40
-squish       . . 41
-squish_infinite       41
-time_trans       42
-train_continuous      . . . 42
-train_discrete       43
-trans_breaks       . 43
-trans_format       . 44
+
 trans_new       44
 trans_range       . 45
 viridis_pal       46
