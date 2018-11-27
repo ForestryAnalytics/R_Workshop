@@ -1,3 +1,14 @@
+---
+title: "``adorn_rounding`` Round the numeric columns in a data.frame."
+author: "Kevin O'Brien"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(janitor)
+```
+
 ## ``adorn_ns`` Add underlying Ns to a tabyl displaying percentages.
 
 #### Description

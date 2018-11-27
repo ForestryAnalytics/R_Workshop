@@ -1,5 +1,14 @@
+---
+title: "``row_to_names`` "
+author: "Kevin O'Brien"
+output: html_document
+---
 
-row_to_names Elevate a row to be the column names of a data.frame.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(janitor)
+```
+
 #### Description
 Elevate a row to be the column names of a data.frame.
 
@@ -11,12 +20,11 @@ remove_rows_above = TRUE)
 </code></pre> 
 
 #### Arguments
-* dat The input data.frame
-* row_number The row of dat containing the variable names
-* remove_row Should the row row_number be removed from the resulting data.frame?
-* remove_rows_above
-* If row_number != 1, should the rows above row_number - that is, between
-* 1:(row_number-1) - be removed from the resulting data.frame?
+* ``dat``: The input data.frame
+* ``row_number``: The row of dat containing the variable names
+* ``remove_row``: Should the row row_number be removed from the resulting data.frame?
+* ``remove_rows_above``: 
+ - If ``row_number != 1``, should the rows above row_number - that is, between 1:(row_number-1) - be removed from the resulting data.frame?
 
 #### Value
 A data.frame with new names (and some rows removed, if specified)
