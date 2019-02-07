@@ -1,15 +1,55 @@
-# Limerick R Workshop
+## Limerick R Workshop
 
-#### The R Environment
+#### Programming Environments
 * What is R?
+* Base R
 * Using R Studio
-* Loading an R Package
+
+#### My First R session
+
+* Creating an object ( simple commands like ``a <- 2`` , b <- ``Kevin`` )
+* Types of Objects : ``data.frames()`` & ``tibbles()``
+* Useful commands: ``class()``,``mode()``,``summary()``
 * Basic Objects (dataframes, lists, vectors, matrices)
 * Using `class()`, `summary()`, `dim()`, `names()` etc
+* Using RStudio Projects
+* The working directory ("getwd()" and ``setwd()``)
+* Listing files in a directory ( ``ls()``)
+* Listing objects in the environment (``list.files()``)
 * Transforming from one object class to another
 
-#### Tidyverse R packages
-* dplyr 
+#### Other useful commands
+* ``head()`` and ``tail()``
+* ``sessionInfo()``
+* ``history()``
+* ``help()``
+* ``apropos()``
+
+#### Loading an Library
+
+* Using mainly ***dplyr*** and ***magrittr***
+* installing an R package ( command line and Rstudio functionality )
+* Loading an R Package in a script
+* name clashes (``dplyr::select()``)
+
+
+#### Loading a CSV file into the R environment
+* ``readr::read_csv()``
+* ``read.csv()``
+
+#### Inspecting the Data
+* ``summary()``, ``nrow()``, ``ncol()``
+* ``glimpse()``
+* Frequency Tables ``janitor::tabyl()``.
+
+
+
+
+<hr>
+## Advanced Material
+
+
+#### Other Tidyverse R packages
 * magrittr
 * tidyr
 * readr
