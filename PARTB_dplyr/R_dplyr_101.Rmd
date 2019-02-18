@@ -18,7 +18,7 @@ The exercise uses a subset of the Sub-compartment database, which has been expor
 ### Getting Started
 Let's start by reading in the data using `read.csv`. Note that you can specify if the file has a header and what the field separator is.
 ```{r}
-scdb <- read.csv('./DATA/scdb_subset.csv', head=TRUE, sep=',')
+scdb <- read.csv('../DATA/scdb_subset.csv', head=TRUE, sep=',')
 ```
 
 
@@ -72,80 +72,149 @@ summary(scdb[1:30,])
 
 
 
-## dplyr Review
+## Getting Started with dplyr
 
 load dplyr package
 ```{r}
 library(dplyr)
 ```
 
-'select' function - select columns and assign to new object
+We will present some of the key dplyr functions that facilitate data manipulation in R. These include:
+
+1. **select()** - pick variables by their names
+2. **filter()** - pick observations by their values
+3. **arrange()** - reorder the rows
+4. **mutate()** - create new variables with functions using existing variables
+5. **summarize()** - collapse many values down to a single summary
+
+One unique feature of dplyr is the 'pipe' function "%>%", which can be used to chain functions together.
+
+### select() function
 
 
-select columns and assign to new object
+Let's start by selecting 3 columns (area, plant year and species) to a new object (scdb_subset):
 ```{r}
 
-scdb %>% select(GIS_AREA, PYR1, SPP1) -> scdb_subset
+scdb %>% 
+    select(GIS_AREA, PYR1, SPP1) -> scdb_subset
 summary(scdb_subset)
 
 ```
 
-
-More flexible select statements, for instance select all the species fields
+You could do this in one step as follows:
 ```{r}
 
-scdb %>% select(COM_SUB, GIS_AREA, contains('SPEC')) -> scdb_subset_species
-
-```
-
-More flexible select statements:
-Exercise: for instance select all *apart* from the species fields
-```{r}
-
-
-```
-
-
-'filter' function - select rows from the data
-```{r}
-
-scdb %>% filter(SPECIES_CO == 'SS') -> scdb_ss_subset
-summary(scdb_ss_subset)
+scdb %>% 
+  select(GIS_AREA, PYR1, SPP1) %>% 
+  summary()
 
 ```
 
 
 
-'filter' function - more complex row selections - select all species starting with 'S'
+More flexible select statements, for instance select all the species fields (i.e. SPP1, SPP2, SPP3, ...) using the **contains()** helper function:
+
 ```{r}
-library(data.table)
+
+scdb %>% 
+  select(COM_SUB, GIS_AREA, contains('SPP')) -> scdb_subset_species
+
+names(scdb_subset_species)
+```
 
 
-scdb %>% filter(SPECIES_CO %like% "^S") -> scdb_s_species
+Let's suppose, you want to omit Species 4 from the above command:
 
-summary(scdb_ss_subset)
+```{r}
+
+scdb %>% 
+  select(COM_SUB, GIS_AREA, contains('SPP'), -(SPP4)) %>%
+  summary()
+
+```
+
+Yet another way to achieve the same thing using the **num_range()** helper function
+
+```{r}
+
+scdb %>% 
+  select(COM_SUB, GIS_AREA, num_range('SPP',1:3)) %>%
+  summary()
+
+```
+
+**Exercise**: What happens if you include a variable name twice in the select function?
+
+
+Let's suppose that you want to move the above variables to the start of the data frame, than you can use the **everything()** function as follows:
+
+```{r, eval=FALSE}
+
+scdb %>% 
+  select(COM_SUB, GIS_AREA, num_range('SPP',1:3), everything()) %>%
+  summary()
 
 ```
 
 
-## 'arrange' function - to sort your data 
+
+**Exercise**: Select all fields, but exclude all species fields
+
+
+
+### filter() function
+
+**filter()** - pick observations by their values using specific expressions. The filter function is synonymous with queries in SQL. 
+
+
+
+Let's filter our data frame to retrieve all rows where the first species is Sitka spruce (SS):
+
 ```{r}
 
-scdb_s_species %>% select(COM_SUB, AREA_HA, SPECIES_CO) %>% arrange(SPECIES_CO, AREA_HA) -> scdb_select_sort
-head(scdb_select_sort)
+scdb %>% 
+  filter(SPP1 == 'SS') %>% 
+  summary() 
 
 ```
 
-## Exercise: Combining select and filter
 
-Using the SCDB, select all subs where the first species is Lodgepole and that were planted before 2010 and summarise the area 
+Let's filter our data frame to retrieve all subs were the first species is Sitka spruce (SS) and where they are older than 30 years of age:
+
+```{r}
+
+scdb %>% 
+  filter(SPP1 == 'SS' & AGE1 > 30) %>% 
+  summary() 
+
+```
+
+**Exercise**: From what you learned this morning, what function could you use to determine how many records are in your result?
 
 
 
-## Summarize by group
 
-scdb %>% group_by(LAND_USE_T) %>% summarize(sum_ha = sum(AREA_HA)) -> area_by_lut 
+### arrange() function
 
-ggplot(area_by_lut, aes(LAND_USE_T, sum_ha)) + geom_bar(stat='identity')
+Order columns using the *arrange()* function. 
+
+Let's select some fields from our data frame and order them by area. 
+
+### 'arrange' function - to sort your data 
+```{r}
+
+scdb %>% 
+  select(COMPARTMEN, SUBID, GIS_AREA) %>%
+  arrange(GIS_AREA) %>% 
+  head()
+
+```
+
+### Combining select() and filter()
+
+**Exercise**: Using the SCDB, select all subs where the first species is Lodgepole and that were planted before 2010 and summarise the area 
+
+
+
 
 
