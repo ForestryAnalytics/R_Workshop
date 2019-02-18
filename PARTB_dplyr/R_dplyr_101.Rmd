@@ -1,0 +1,151 @@
+---
+title: "Introduction to dplyr"
+author: "Daniel McInerney, Kevin O'Brien"
+date: "18 February 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This R markdown file is an introduction to data analysis and visualisation using tidyverse, specifically dplyr and ggplot2:
+
+The exercise uses a subset of the Sub-compartment database, which has been exported as a comma separated file (CSV). 
+
+### Getting Started
+Let's start by reading in the data using `read.csv`. Note that you can specify if the file has a header and what the field separator is.
+```{r}
+scdb <- read.csv('./DATA/scdb_subset.csv', head=TRUE, sep=',')
+```
+
+
+Check that the data has been correctly assigned to the scdb object
+
+```{r}
+ls()
+```
+
+Review the internal structure of the scdb object.  
+```{r}
+str(scdb)
+```
+
+Note that first line of the output, what data type is it?
+
+Do you know a function that can be used to confirm this data type?
+
+
+You can show the full contents of the object by simply typing `scdb`:
+```{r, eval=FALSE}
+scdb
+```
+
+Return the field names associated with the object
+`scdb`:
+```{r}
+names(scdb)
+```
+
+### Summarising your data
+
+And summarise the data stored in the object
+```{r, eval=TRUE}
+summary(scdb)
+```
+
+Extract subsets for summaries. Firstly for a specific field, note that you identify a field using the "$" and then the field name. Secondly, select the first five columns, using [1:5]
+
+```{r}
+summary(scdb$SURVEY_YEA)
+
+summary(scdb[1:5])
+```
+
+Note, summarise only the first 30 rows, note the use of the comma:
+
+```{r}
+summary(scdb[1:30,])
+```
+
+
+
+## dplyr Review
+
+load dplyr package
+```{r}
+library(dplyr)
+```
+
+'select' function - select columns and assign to new object
+
+
+select columns and assign to new object
+```{r}
+
+scdb %>% select(GIS_AREA, PYR1, SPP1) -> scdb_subset
+summary(scdb_subset)
+
+```
+
+
+More flexible select statements, for instance select all the species fields
+```{r}
+
+scdb %>% select(COM_SUB, GIS_AREA, contains('SPEC')) -> scdb_subset_species
+
+```
+
+More flexible select statements:
+Exercise: for instance select all *apart* from the species fields
+```{r}
+
+
+```
+
+
+'filter' function - select rows from the data
+```{r}
+
+scdb %>% filter(SPECIES_CO == 'SS') -> scdb_ss_subset
+summary(scdb_ss_subset)
+
+```
+
+
+
+'filter' function - more complex row selections - select all species starting with 'S'
+```{r}
+library(data.table)
+
+
+scdb %>% filter(SPECIES_CO %like% "^S") -> scdb_s_species
+
+summary(scdb_ss_subset)
+
+```
+
+
+## 'arrange' function - to sort your data 
+```{r}
+
+scdb_s_species %>% select(COM_SUB, AREA_HA, SPECIES_CO) %>% arrange(SPECIES_CO, AREA_HA) -> scdb_select_sort
+head(scdb_select_sort)
+
+```
+
+## Exercise: Combining select and filter
+
+Using the SCDB, select all subs where the first species is Lodgepole and that were planted before 2010 and summarise the area 
+
+
+
+## Summarize by group
+
+scdb %>% group_by(LAND_USE_T) %>% summarize(sum_ha = sum(AREA_HA)) -> area_by_lut 
+
+ggplot(area_by_lut, aes(LAND_USE_T, sum_ha)) + geom_bar(stat='identity')
+
+
