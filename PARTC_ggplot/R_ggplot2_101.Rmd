@@ -30,7 +30,21 @@ Load the ggplot2 library
 library(ggplot2)
 ```
 
-Let's start by creating a simple histogram of Yield Class by Species.
+Let's start by creating a bar chart of counts of species within the database.
+
+```{r}
+ggplot(data=scdb) + geom_bar(mapping = aes(x=spp1))
+```
+
+
+Let's make it more readable by limiting the chart to **spruce** only:
+
+```{r}
+ggplot(data=dplyr::filter(scdb, spp1=='SS'|spp1=='NS')) + geom_bar(mapping = aes(x=spp1))
+```
+
+
+Let's extend this idea by creating a bar chart using two variables: Yield Class and Species.
 
 ```{r}
 ggplot(data=scdb, aes(yc1, fill=spp1)) +  geom_histogram()
@@ -42,6 +56,12 @@ This is a start, but a bit overloaded.
 
 
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 ggplot(data=dplyr::filter(scdb, spp1=='SS'), aes(yc1, fill=spp1)) + geom_histogram()
 ```
+
+
+```{r, eval=TRUE}
+ggplot(data=scdb, aes(x=spp1, y=gis_area)) + geom_boxplot()
+```
+

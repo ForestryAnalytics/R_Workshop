@@ -98,6 +98,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -105,14 +108,74 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -129,8 +192,8 @@ $(document).ready(function () {
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
+<div id="introduction-to-dplyr" class="section level2">
+<h2>Introduction to dplyr</h2>
 <p>This R markdown file is an introduction to data analysis and visualisation using tidyverse, specifically dplyr and ggplot2:</p>
 <p>The exercise uses a subset of the Sub-compartment database, which has been exported as a comma separated file (CSV).</p>
 <div id="getting-started" class="section level3">
@@ -142,422 +205,404 @@ $(document).ready(function () {
 <pre><code>## [1] &quot;scdb&quot;</code></pre>
 <p>Review the internal structure of the scdb object.</p>
 <pre class="r"><code>str(scdb)</code></pre>
-<pre><code>## 'data.frame':    10346 obs. of  71 variables:
-##  $ OBJECTID  : int  10898 10899 10900 10901 11029 11030 11031 11032 118470 118471 ...
-##  $ FOREST_COD: Factor w/ 39 levels &quot;CW01&quot;,&quot;CW03&quot;,..: 2 2 2 2 38 38 38 38 29 29 ...
-##  $ COMPARTMEN: Factor w/ 1982 levels &quot;11065N&quot;,&quot;11067D&quot;,..: 200 200 200 200 201 201 201 201 1291 1291 ...
-##  $ SUBID     : int  7 2 1 6 1 4 5 6 5 10 ...
-##  $ GIS_AREA  : num  0.6 4.07 10.82 0.57 9.99 ...
-##  $ LUT       : Factor w/ 16 levels &quot;BAREMG&quot;,&quot;BAREPL&quot;,..: 4 11 7 4 7 7 7 7 7 7 ...
-##  $ SURVEY_YEA: int  2018 2018 2018 2018 2004 1999 2004 1999 2012 2013 ...
-##  $ PRODUCTIVE: num  85 95 100 90 100 90 100 80 97 90 ...
-##  $ CONST     : Factor w/ 18 levels &quot;AMNTY&quot;,&quot;ARBOR&quot;,..: 10 9 9 9 9 9 9 9 9 9 ...
-##  $ MIX_TYPE  : Factor w/ 4 levels &quot;&quot;,&quot;INT&quot;,&quot;NINT&quot;,..: 2 2 2 2 1 1 1 2 1 1 ...
-##  $ AVG_SPACIN: num  2 2 2 2 0 0 0 0 0 2.1 ...
-##  $ ESTB_STEMS: int  0 0 0 0 2550 0 2520 0 0 0 ...
-##  $ BA_METHOD : Factor w/ 17 levels &quot;&quot;,&quot;EOFELL&quot;,&quot;FDC4YR&quot;,..: 14 14 14 14 10 10 10 10 10 9 ...
-##  $ BA_DATE   : Factor w/ 894 levels &quot;&quot;,&quot;1996-09-30&quot;,..: 796 796 796 796 564 564 564 564 1 1 ...
-##  $ DEAD_FALL : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ DEAD_STAND: int  8 0 8 8 0 0 0 0 0 0 ...
-##  $ DEAD_SURVE: Factor w/ 3 levels &quot;&quot;,&quot;N&quot;,&quot;Y&quot;: 3 3 3 3 2 2 2 2 2 2 ...
-##  $ COMMENTS  : Factor w/ 45 levels &quot;&quot;,&quot;24092018 BLOWN in part.&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ SPP1      : Factor w/ 44 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 2 10 41 2 41 29 41 29 41 41 ...
-##  $ PLANTDATE1: Factor w/ 182 levels &quot;&quot;,&quot;1800-09-30&quot;,..: 124 124 124 124 125 63 125 63 144 109 ...
-##  $ PYR1      : int  1998 1998 1998 1998 1999 1964 1999 1964 2010 1991 ...
-##  $ PYRTYPE1  : Factor w/ 9 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 3 3 3 3 5 3 5 3 5 5 ...
-##  $ CANOPY1   : num  94 80 95 84 100 100 100 95 100 100 ...
-##  $ YC1       : int  6 22 24 6 22 10 22 10 16 24 ...
-##  $ YCTYPE1   : Factor w/ 5 levels &quot;&quot;,&quot;C&quot;,&quot;L&quot;,&quot;N&quot;,..: 1 1 1 1 4 2 4 2 4 3 ...
-##  $ AGE1      : int  21 21 21 21 20 55 20 55 9 28 ...
-##  $ MEAN_DBH1 : num  12.5 15.3 16.8 15 17 14 17 14 0 0 ...
-##  $ STEMS1    : int  1500 1483 2060 1530 2166 2075 2133 2066 0 0 ...
-##  $ HEIGHT1   : num  11 16 13.5 10 12 10 13 10 0 0 ...
-##  $ SPP2      : Factor w/ 46 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 3 3 11 3 1 1 1 31 1 1 ...
-##  $ PLANTDATE2: Factor w/ 172 levels &quot;&quot;,&quot;1800-09-30&quot;,..: 120 120 119 120 1 1 1 73 1 1 ...
-##  $ PYR2      : int  1999 1999 1998 1999 0 0 0 1970 0 0 ...
-##  $ PYRTYPE2  : Factor w/ 9 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 9 9 3 9 1 1 1 3 1 1 ...
-##  $ CANOPY2   : num  6 18 3 4 0 0 0 5 0 0 ...
-##  $ YC2       : int  0 6 0 0 0 0 0 0 0 0 ...
-##  $ YCTYPE2   : Factor w/ 5 levels &quot;&quot;,&quot;C&quot;,&quot;L&quot;,&quot;N&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ AGE2      : int  20 20 21 20 0 0 0 49 0 0 ...
-##  $ MEAN_DBH2 : num  0 10 16 9 0 0 0 0 0 0 ...
-##  $ STEMS2    : int  0 816 68 170 0 0 0 0 0 0 ...
-##  $ HEIGHT2   : num  0 14 19 12 0 0 0 0 0 0 ...
-##  $ SPP3      : Factor w/ 40 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 1 28 19 29 1 1 1 1 1 1 ...
-##  $ PLANTDATE3: Factor w/ 127 levels &quot;&quot;,&quot;1800-09-30&quot;,..: 1 94 94 18 1 1 1 1 1 1 ...
-##  $ PYR3      : int  0 1998 1998 1930 0 0 0 0 0 0 ...
-##  $ PYRTYPE3  : Factor w/ 9 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 1 3 3 3 1 1 1 1 1 1 ...
-##  $ CANOPY3   : num  0 2 2 12 0 0 0 0 0 0 ...
-##  $ YC3       : int  0 4 0 0 0 0 0 0 0 0 ...
-##  $ YCTYPE3   : Factor w/ 5 levels &quot;&quot;,&quot;C&quot;,&quot;L&quot;,&quot;N&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ AGE3      : int  0 21 21 89 0 0 0 0 0 0 ...
-##  $ MEAN_DBH3 : num  0 0 23 0 0 0 0 0 0 0 ...
-##  $ STEMS3    : int  0 0 27 0 0 0 0 0 0 0 ...
-##  $ HEIGHT3   : num  0 4 17 0 0 0 0 0 0 0 ...
-##  $ SPP4      : Factor w/ 36 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ PLANTDATE4: Factor w/ 96 levels &quot;&quot;,&quot;1850-09-30&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ PYR4      : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ PYRTYPE4  : Factor w/ 8 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ CANOPY4   : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ YC4       : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ YCTYPE4   : Factor w/ 2 levels &quot;&quot;,&quot;N&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ AGE4      : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ MEAN_DBH4 : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ STEMS4    : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ HEIGHT4   : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ MODIFIEDON: Factor w/ 1 level &quot;2019-01-11&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ BL_COMMENT: Factor w/ 21 levels &quot;&quot;,&quot;BNC&quot;,&quot;BNC16&quot;,..: 18 18 18 18 18 18 18 18 18 18 ...
-##  $ BA1       : num  18.4 27.3 45.7 27 49.2 ...
-##  $ BA2       : num  0 6.41 1.37 1.08 0 0 0 0 0 0 ...
-##  $ BA3       : num  0 0 1.12 0 0 0 0 0 0 0 ...
-##  $ BA4       : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ SHAPE_STAr: num  6005 40697 108171 5732 99926 ...
-##  $ SHAPE_STLe: num  999 995 2493 434 1529 ...
-##  $ COM_SUB   : logi  NA NA NA NA NA NA ...</code></pre>
+<pre><code>## 'data.frame':    7031 obs. of  70 variables:
+##  $ objectid  : int  17273 17274 17275 17276 17277 17278 17279 17280 17281 17282 ...
+##  $ forest_cod: Factor w/ 33 levels &quot;CW01&quot;,&quot;KE03&quot;,..: 5 5 5 5 5 5 5 5 5 5 ...
+##  $ compartmen: Factor w/ 1452 levels &quot;15004W&quot;,&quot;15007H&quot;,..: 387 387 387 387 387 387 387 387 387 387 ...
+##  $ subid     : int  9 26 12 18 24 7 22 5 17 14 ...
+##  $ gis_area  : num  2.88 3.1 1.19 1.13 1.65 1.41 1.07 4.19 0.77 0.85 ...
+##  $ lut       : Factor w/ 16 levels &quot;BAREMG&quot;,&quot;BAREPL&quot;,..: 4 13 13 13 11 4 7 11 7 4 ...
+##  $ survey_yea: int  1997 2002 2002 2002 2003 2005 2007 2003 1996 1985 ...
+##  $ productive: num  70 0 0 0 90 100 100 60 90 100 ...
+##  $ const     : Factor w/ 16 levels &quot;AMNTY&quot;,&quot;BIOD&quot;,..: 8 8 8 8 8 2 8 8 8 8 ...
+##  $ mix_type  : Factor w/ 3 levels &quot;&quot;,&quot;INT&quot;,&quot;NINT&quot;: 1 1 2 1 2 3 1 2 2 1 ...
+##  $ avg_spacin: num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ estb_stems: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ ba_method : Factor w/ 14 levels &quot;EOFELL&quot;,&quot;FDC4YR&quot;,..: 8 8 8 8 8 8 8 8 8 8 ...
+##  $ ba_date   : Factor w/ 564 levels &quot;&quot;,&quot;2000-01-01&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ dead_fall : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ dead_stand: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ dead_surve: Factor w/ 3 levels &quot;&quot;,&quot;N&quot;,&quot;Y&quot;: 2 3 3 3 3 2 2 3 2 2 ...
+##  $ comments  : Factor w/ 5 levels &quot;&quot;,&quot;EOFELL 01/05/2018&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ spp1      : Factor w/ 45 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 3 3 3 3 42 32 42 32 42 4 ...
+##  $ plantdate1: Factor w/ 131 levels &quot;&quot;,&quot;1800-09-30&quot;,..: 85 1 1 1 81 84 85 82 74 73 ...
+##  $ pyr1      : int  1992 0 0 0 1988 1991 1992 1989 1983 1982 ...
+##  $ pyrtype1  : Factor w/ 9 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 3 3 3 3 3 9 5 9 3 3 ...
+##  $ canopy1   : num  100 100 95 100 37 60 100 43 90 100 ...
+##  $ yc1       : int  0 0 0 0 22 0 18 0 24 0 ...
+##  $ yctype1   : Factor w/ 5 levels &quot;&quot;,&quot;C&quot;,&quot;L&quot;,&quot;N&quot;,..: 1 1 1 1 1 1 5 1 1 1 ...
+##  $ age1      : int  27 0 0 0 31 28 27 30 36 37 ...
+##  $ mean_dbh1 : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ stems1    : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ height1   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ ba1       : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ spp2      : Factor w/ 46 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 1 1 4 1 3 3 1 43 3 1 ...
+##  $ plantdate2: Factor w/ 121 levels &quot;&quot;,&quot;1800-09-30&quot;,..: 1 1 1 1 74 48 1 75 73 1 ...
+##  $ pyr2      : int  0 0 0 0 1984 1960 0 1985 1983 0 ...
+##  $ pyrtype2  : Factor w/ 8 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 1 1 3 1 8 3 1 3 3 1 ...
+##  $ canopy2   : num  0 0 5 0 40 40 0 17 10 0 ...
+##  $ yc2       : int  0 0 0 0 0 0 0 26 0 0 ...
+##  $ yctype2   : Factor w/ 5 levels &quot;&quot;,&quot;C&quot;,&quot;L&quot;,&quot;N&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ age2      : int  0 0 0 0 35 59 0 34 36 0 ...
+##  $ mean_dbh2 : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ stems2    : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ height2   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ ba2       : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ spp3      : Factor w/ 37 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 1 1 1 1 24 1 1 3 1 1 ...
+##  $ plantdate3: Factor w/ 102 levels &quot;&quot;,&quot;1800-09-30&quot;,..: 1 1 1 1 30 1 1 41 1 1 ...
+##  $ pyr3      : int  0 0 0 0 1949 0 0 1960 0 0 ...
+##  $ pyrtype3  : Factor w/ 9 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 1 1 1 1 3 1 1 3 1 1 ...
+##  $ canopy3   : num  0 0 0 0 18 0 0 20 0 0 ...
+##  $ yc3       : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ yctype3   : Factor w/ 5 levels &quot;&quot;,&quot;C&quot;,&quot;L&quot;,&quot;N&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ age3      : int  0 0 0 0 70 0 0 59 0 0 ...
+##  $ mean_dbh3 : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ stems3    : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ height3   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ ba3       : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ spp4      : Factor w/ 29 levels &quot;&quot;,&quot;ALD&quot;,&quot;ASH&quot;,..: 1 1 1 1 21 1 1 15 1 1 ...
+##  $ plantdate4: Factor w/ 85 levels &quot;&quot;,&quot;1880-09-30&quot;,..: 1 1 1 1 4 1 1 54 1 1 ...
+##  $ pyr4      : int  0 0 0 0 1900 0 0 1985 0 0 ...
+##  $ pyrtype4  : Factor w/ 8 levels &quot;&quot;,&quot;A&quot;,&quot;E&quot;,&quot;M&quot;,..: 1 1 1 1 3 1 1 3 1 1 ...
+##  $ canopy4   : num  0 0 0 0 5 0 0 20 0 0 ...
+##  $ yc4       : int  0 0 0 0 0 0 0 10 0 0 ...
+##  $ yctype4   : Factor w/ 3 levels &quot;&quot;,&quot;N&quot;,&quot;T&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ age4      : int  0 0 0 0 119 0 0 34 0 0 ...
+##  $ mean_dbh4 : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ stems4    : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ height4   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ ba4       : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ modifiedon: Factor w/ 1 level &quot;2018-07-03&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ shape_star: num  28838 31024 11938 11262 16527 ...
+##  $ shape_stle: num  898 1066 583 517 675 ...
+##  $ com_sub   : logi  NA NA NA NA NA NA ...</code></pre>
 <p>Note that first line of the output, what data type is it?</p>
 <p>Do you know a function that can be used to confirm this data type?</p>
 <p>You can show the full contents of the object by simply typing <code>scdb</code>:</p>
 <pre class="r"><code>scdb</code></pre>
 <p>Return the field names associated with the object <code>scdb</code>:</p>
 <pre class="r"><code>names(scdb)</code></pre>
-<pre><code>##  [1] &quot;OBJECTID&quot;   &quot;FOREST_COD&quot; &quot;COMPARTMEN&quot; &quot;SUBID&quot;      &quot;GIS_AREA&quot;  
-##  [6] &quot;LUT&quot;        &quot;SURVEY_YEA&quot; &quot;PRODUCTIVE&quot; &quot;CONST&quot;      &quot;MIX_TYPE&quot;  
-## [11] &quot;AVG_SPACIN&quot; &quot;ESTB_STEMS&quot; &quot;BA_METHOD&quot;  &quot;BA_DATE&quot;    &quot;DEAD_FALL&quot; 
-## [16] &quot;DEAD_STAND&quot; &quot;DEAD_SURVE&quot; &quot;COMMENTS&quot;   &quot;SPP1&quot;       &quot;PLANTDATE1&quot;
-## [21] &quot;PYR1&quot;       &quot;PYRTYPE1&quot;   &quot;CANOPY1&quot;    &quot;YC1&quot;        &quot;YCTYPE1&quot;   
-## [26] &quot;AGE1&quot;       &quot;MEAN_DBH1&quot;  &quot;STEMS1&quot;     &quot;HEIGHT1&quot;    &quot;SPP2&quot;      
-## [31] &quot;PLANTDATE2&quot; &quot;PYR2&quot;       &quot;PYRTYPE2&quot;   &quot;CANOPY2&quot;    &quot;YC2&quot;       
-## [36] &quot;YCTYPE2&quot;    &quot;AGE2&quot;       &quot;MEAN_DBH2&quot;  &quot;STEMS2&quot;     &quot;HEIGHT2&quot;   
-## [41] &quot;SPP3&quot;       &quot;PLANTDATE3&quot; &quot;PYR3&quot;       &quot;PYRTYPE3&quot;   &quot;CANOPY3&quot;   
-## [46] &quot;YC3&quot;        &quot;YCTYPE3&quot;    &quot;AGE3&quot;       &quot;MEAN_DBH3&quot;  &quot;STEMS3&quot;    
-## [51] &quot;HEIGHT3&quot;    &quot;SPP4&quot;       &quot;PLANTDATE4&quot; &quot;PYR4&quot;       &quot;PYRTYPE4&quot;  
-## [56] &quot;CANOPY4&quot;    &quot;YC4&quot;        &quot;YCTYPE4&quot;    &quot;AGE4&quot;       &quot;MEAN_DBH4&quot; 
-## [61] &quot;STEMS4&quot;     &quot;HEIGHT4&quot;    &quot;MODIFIEDON&quot; &quot;BL_COMMENT&quot; &quot;BA1&quot;       
-## [66] &quot;BA2&quot;        &quot;BA3&quot;        &quot;BA4&quot;        &quot;SHAPE_STAr&quot; &quot;SHAPE_STLe&quot;
-## [71] &quot;COM_SUB&quot;</code></pre>
+<pre><code>##  [1] &quot;objectid&quot;   &quot;forest_cod&quot; &quot;compartmen&quot; &quot;subid&quot;      &quot;gis_area&quot;  
+##  [6] &quot;lut&quot;        &quot;survey_yea&quot; &quot;productive&quot; &quot;const&quot;      &quot;mix_type&quot;  
+## [11] &quot;avg_spacin&quot; &quot;estb_stems&quot; &quot;ba_method&quot;  &quot;ba_date&quot;    &quot;dead_fall&quot; 
+## [16] &quot;dead_stand&quot; &quot;dead_surve&quot; &quot;comments&quot;   &quot;spp1&quot;       &quot;plantdate1&quot;
+## [21] &quot;pyr1&quot;       &quot;pyrtype1&quot;   &quot;canopy1&quot;    &quot;yc1&quot;        &quot;yctype1&quot;   
+## [26] &quot;age1&quot;       &quot;mean_dbh1&quot;  &quot;stems1&quot;     &quot;height1&quot;    &quot;ba1&quot;       
+## [31] &quot;spp2&quot;       &quot;plantdate2&quot; &quot;pyr2&quot;       &quot;pyrtype2&quot;   &quot;canopy2&quot;   
+## [36] &quot;yc2&quot;        &quot;yctype2&quot;    &quot;age2&quot;       &quot;mean_dbh2&quot;  &quot;stems2&quot;    
+## [41] &quot;height2&quot;    &quot;ba2&quot;        &quot;spp3&quot;       &quot;plantdate3&quot; &quot;pyr3&quot;      
+## [46] &quot;pyrtype3&quot;   &quot;canopy3&quot;    &quot;yc3&quot;        &quot;yctype3&quot;    &quot;age3&quot;      
+## [51] &quot;mean_dbh3&quot;  &quot;stems3&quot;     &quot;height3&quot;    &quot;ba3&quot;        &quot;spp4&quot;      
+## [56] &quot;plantdate4&quot; &quot;pyr4&quot;       &quot;pyrtype4&quot;   &quot;canopy4&quot;    &quot;yc4&quot;       
+## [61] &quot;yctype4&quot;    &quot;age4&quot;       &quot;mean_dbh4&quot;  &quot;stems4&quot;     &quot;height4&quot;   
+## [66] &quot;ba4&quot;        &quot;modifiedon&quot; &quot;shape_star&quot; &quot;shape_stle&quot; &quot;com_sub&quot;</code></pre>
 </div>
 <div id="summarising-your-data" class="section level3">
 <h3>Summarising your data</h3>
 <p>And summarise the data stored in the object</p>
 <pre class="r"><code>summary(scdb)</code></pre>
-<pre><code>##     OBJECTID        FOREST_COD     COMPARTMEN        SUBID       
-##  Min.   :   802   KK06   : 849   22054H :   29   Min.   : 1.000  
-##  1st Qu.: 14453   CW03   : 719   17015S :   28   1st Qu.: 2.000  
-##  Median : 17336   WX04   : 561   77877A :   25   Median : 4.000  
-##  Mean   : 55963   LS08   : 547   21300V :   23   Mean   : 4.799  
-##  3rd Qu.:120743   LS01   : 537   21301Q :   23   3rd Qu.: 7.000  
-##  Max.   :161231   TY14   : 528   21302L :   22   Max.   :31.000  
-##                   (Other):6605   (Other):10196                   
-##     GIS_AREA           LUT         SURVEY_YEA     PRODUCTIVE   
-##  Min.   : 0.010   CHF    :6649   Min.   :1975   Min.   :  0.0  
-##  1st Qu.: 0.990   BHF    :1199   1st Qu.:2001   1st Qu.: 80.0  
-##  Median : 2.030   MHF    : 989   Median :2009   Median : 95.0  
-##  Mean   : 3.603   FELLED : 534   Mean   :2007   Mean   : 78.7  
-##  3rd Qu.: 4.430   BAREPL : 190   3rd Qu.:2014   3rd Qu.:100.0  
-##  Max.   :82.410   SCRUB  : 160   Max.   :2018   Max.   :100.0  
-##                   (Other): 625                                 
-##      CONST      MIX_TYPE      AVG_SPACIN       ESTB_STEMS    
-##  NONE   :9649       :4847   Min.   :0.0000   Min.   :   0.0  
-##  ESB    : 143   INT :4681   1st Qu.:0.0000   1st Qu.:   0.0  
-##  LEGAL  : 128   NINT: 816   Median :0.0000   Median :   0.0  
-##  AMNTY  :  57   NONE:   2   Mean   :0.8967   Mean   : 406.9  
-##  SEEDST :  49               3rd Qu.:2.0000   3rd Qu.:   0.0  
-##  MILL   :  47               Max.   :5.3000   Max.   :6000.0  
-##  (Other): 273                                                
-##    BA_METHOD          BA_DATE       DEAD_FALL          DEAD_STAND      
-##  NONE   :5613             :6651   Min.   :   0.000   Min.   :   0.000  
-##  PLOT   :1631   2015-10-01:  82   1st Qu.:   0.000   1st Qu.:   0.000  
-##  LIDAR  : 954   2017-07-01:  76   Median :   0.000   Median :   0.000  
-##  FDCPLT : 567   2016-12-01:  64   Mean   :   2.255   Mean   :   2.326  
-##  OCULAR : 521   2014-03-18:  49   3rd Qu.:   0.000   3rd Qu.:   0.000  
-##  FDC4YR : 359   2016-11-01:  45   Max.   :1200.000   Max.   :1050.000  
-##  (Other): 701   (Other)   :3379                                        
-##  DEAD_SURVE
-##   :  17    
-##  N:5760    
-##  Y:4569    
-##            
-##            
-##            
-##            
-##                                                                                                                   COMMENTS    
-##                                                                                                                       :10289  
-##  FDCFEL 18/05/2018                                                                                                    :    3  
-##  Realigned to HB boundary after discussion with D Walsh - sub 4 should not have been entered as sub 1 was an IFUT sale:    3  
-##  ROW                                                                                                                  :    3  
-##  WATER                                                                                                                :    3  
-##  a lot of regen larch in parts .some parts nseed fertlizer                                                            :    2  
-##  (Other)                                                                                                              :   43  
-##       SPP1           PLANTDATE1        PYR1         PYRTYPE1   
-##  SS     :4961             :1252   Min.   :   0   R      :4797  
-##         : 765   2003-09-30: 296   1st Qu.:1972   E      :3866  
-##  NS     : 673   2002-09-30: 274   Median :1990          :1170  
-##  DF     : 612   1988-09-30: 273   Mean   :1748   W      : 252  
-##  JL     : 429   2004-09-30: 271   3rd Qu.:2002   U      :  86  
-##  LPS    : 417   2001-09-30: 263   Max.   :2019   T      :  84  
-##  (Other):2489   (Other)   :7717                  (Other):  91  
-##     CANOPY1            YC1        YCTYPE1       AGE1       
-##  Min.   :  0.00   Min.   : 0.00    :5426   Min.   :  0.00  
-##  1st Qu.: 68.00   1st Qu.: 4.00   C:  55   1st Qu.: 11.00  
-##  Median : 90.00   Median :14.00   L:1067   Median : 23.00  
-##  Mean   : 77.24   Mean   :12.36   N:3618   Mean   : 26.49  
-##  3rd Qu.:100.00   3rd Qu.:18.00   T: 180   3rd Qu.: 37.00  
-##  Max.   :100.00   Max.   :30.00            Max.   :219.00  
+<pre><code>##     objectid        forest_cod     compartmen       subid       
+##  Min.   :  7156   TY12   : 652   22054H :  29   Min.   : 1.000  
+##  1st Qu.: 17282   LS09   : 584   77877A :  23   1st Qu.: 2.000  
+##  Median :118542   LS08   : 530   21763L :  22   Median : 4.000  
+##  Mean   : 79114   KK02   : 508   75133R :  20   Mean   : 4.531  
+##  3rd Qu.:121052   OY07   : 427   22055C :  19   3rd Qu.: 6.000  
+##  Max.   :130719   LS06   : 342   22064B :  18   Max.   :31.000  
+##                   (Other):3988   (Other):6900                   
+##     gis_area           lut         survey_yea     productive    
+##  Min.   : 0.030   CHF    :4623   Min.   :1975   Min.   :  0.00  
+##  1st Qu.: 1.020   BHF    : 754   1st Qu.:2002   1st Qu.: 80.00  
+##  Median : 2.110   MHF    : 570   Median :2010   Median : 95.00  
+##  Mean   : 3.829   FELLED : 322   Mean   :2008   Mean   : 77.03  
+##  3rd Qu.: 4.830   SCRUB  : 146   3rd Qu.:2013   3rd Qu.:100.00  
+##  Max.   :63.650   BAREPL : 137   Max.   :2018   Max.   :100.00  
+##                   (Other): 479                                  
+##      const      mix_type      avg_spacin       estb_stems    
+##  NONE   :6458       :3645   Min.   :0.0000   Min.   :   0.0  
+##  ESB    : 152   INT :2900   1st Qu.:0.0000   1st Qu.:   0.0  
+##  LEGAL  : 109   NINT: 486   Median :0.0000   Median :   0.0  
+##  MILL   :  47               Mean   :0.9051   Mean   : 360.8  
+##  BIOD   :  41               3rd Qu.:2.0000   3rd Qu.:   0.0  
+##  SEEDST :  37               Max.   :8.9000   Max.   :5600.0  
+##  (Other): 187                                                
+##    ba_method          ba_date       dead_fall         dead_stand      
+##  NONE   :3555             :4841   Min.   :  0.000   Min.   :   0.000  
+##  LIDAR  :1146   2013-02-05:  48   1st Qu.:  0.000   1st Qu.:   0.000  
+##  PLOT   : 968   2015-10-01:  40   Median :  0.000   Median :   0.000  
+##  FDCPLT : 494   2011-03-23:  38   Mean   :  1.387   Mean   :   1.417  
+##  OCULAR : 253   2017-01-01:  38   3rd Qu.:  0.000   3rd Qu.:   0.000  
+##  FDC4YR : 228   2017-07-01:  38   Max.   :650.000   Max.   :1050.000  
+##  (Other): 387   (Other)   :1988                                       
+##  dead_surve                            comments         spp1     
+##   :   3                                    :7025   SS     :3396  
+##  N:3893     EOFELL 01/05/2018              :   2   NS     : 677  
+##  Y:3135     FDCFEL 21/05/2018              :   1          : 503  
+##             Realigned to HB boundary       :   1   LPS    : 354  
+##             Realigned to HB boundary after :   2   BI     : 240  
+##                                                    BE     : 236  
+##                                                    (Other):1625  
+##       plantdate1        pyr1         pyrtype1       canopy1      
+##            : 922   Min.   :   0   E      :3093   Min.   :  0.00  
+##  1988-09-30: 195   1st Qu.:1970   R      :2899   1st Qu.: 70.00  
+##  1989-09-30: 185   Median :1989          : 767   Median : 95.00  
+##  2002-09-30: 184   Mean   :1728   W      : 124   Mean   : 77.83  
+##  2003-09-30: 180   3rd Qu.:2002   M      :  53   3rd Qu.:100.00  
+##  1995-09-30: 169   Max.   :2018   T      :  41   Max.   :100.00  
+##  (Other)   :5196                  (Other):  54                   
+##       yc1        yctype1       age1          mean_dbh1     
+##  Min.   : 0.00    :3446   Min.   :  0.00   Min.   : 0.000  
+##  1st Qu.: 4.00   C:   7   1st Qu.:  9.00   1st Qu.: 0.000  
+##  Median :14.00   L:1160   Median : 23.00   Median : 0.000  
+##  Mean   :12.39   N:2307   Mean   : 25.78   Mean   : 4.981  
+##  3rd Qu.:18.00   T: 111   3rd Qu.: 38.00   3rd Qu.: 0.000  
+##  Max.   :30.00            Max.   :219.00   Max.   :63.000  
 ##                                                            
-##    MEAN_DBH1          STEMS1          HEIGHT1            SPP2     
-##  Min.   : 0.000   Min.   :   0.0   Min.   : 0.000          :4668  
-##  1st Qu.: 0.000   1st Qu.:   0.0   1st Qu.: 0.000   BI     : 730  
-##  Median : 0.000   Median :   0.0   Median : 0.000   JL     : 715  
-##  Mean   : 5.694   Mean   : 364.9   Mean   : 4.572   SS     : 549  
-##  3rd Qu.:13.000   3rd Qu.: 487.8   3rd Qu.:10.000   ASH    : 446  
-##  Max.   :65.000   Max.   :3700.0   Max.   :55.000   LPS    : 442  
-##                                                     (Other):2796  
-##       PLANTDATE2        PYR2         PYRTYPE2       CANOPY2      
-##            :4890   Min.   :   0          :4849   Min.   : 0.000  
-##  2003-09-30: 220   1st Qu.:   0   E      :2366   1st Qu.: 0.000  
-##  2002-09-30: 189   Median :1939   R      :1947   Median : 2.000  
-##  2004-09-30: 176   Mean   :1047   W      : 963   Mean   : 9.108  
-##  2001-09-30: 165   3rd Qu.:1993   T      : 119   3rd Qu.:15.000  
-##  2006-09-30: 146   Max.   :2019   M      :  59   Max.   :76.000  
-##  (Other)   :4560                  (Other):  43                   
-##       YC2         YCTYPE2       AGE2          MEAN_DBH2     
-##  Min.   : 0.000    :9192   Min.   :  0.00   Min.   : 0.000  
-##  1st Qu.: 0.000   C:   7   1st Qu.:  0.00   1st Qu.: 0.000  
-##  Median : 0.000   L:  26   Median :  4.00   Median : 0.000  
-##  Mean   : 2.137   N:1092   Mean   : 17.78   Mean   : 2.209  
-##  3rd Qu.: 0.000   T:  29   3rd Qu.: 29.00   3rd Qu.: 0.000  
-##  Max.   :30.000            Max.   :219.00   Max.   :60.000  
+##      stems1          height1            ba1              spp2     
+##  Min.   :   0.0   Min.   : 0.000   Min.   : 0.000          :3505  
+##  1st Qu.:   0.0   1st Qu.: 0.000   1st Qu.: 0.000   BI     : 495  
+##  Median :   0.0   Median : 0.000   Median : 0.000   JL     : 454  
+##  Mean   : 314.1   Mean   : 3.985   Mean   : 8.566   SS     : 324  
+##  3rd Qu.:   0.0   3rd Qu.: 6.000   3rd Qu.: 0.000   ASH    : 303  
+##  Max.   :3300.0   Max.   :55.000   Max.   :99.000   ALD    : 244  
+##                                                     (Other):1706  
+##       plantdate2        pyr2           pyrtype2       canopy2      
+##            :3709   Min.   :   0.0          :3630   Min.   : 0.000  
+##  2003-09-30: 134   1st Qu.:   0.0   E      :1699   1st Qu.: 0.000  
+##  2002-09-30: 117   Median :   0.0   R      :1104   Median : 0.000  
+##  2004-09-30: 108   Mean   : 938.3   W      : 465   Mean   : 8.495  
+##  2005-09-30:  94   3rd Qu.:1989.0   T      :  66   3rd Qu.:14.000  
+##  2006-09-30:  90   Max.   :2018.0   M      :  33   Max.   :70.000  
+##  (Other)   :2779                    (Other):  34                   
+##       yc2         yctype2       age2          mean_dbh2     
+##  Min.   : 0.000    :6287   Min.   :  0.00   Min.   : 0.000  
+##  1st Qu.: 0.000   C:   1   1st Qu.:  0.00   1st Qu.: 0.000  
+##  Median : 0.000   L:  17   Median :  0.00   Median : 0.000  
+##  Mean   : 1.923   N: 710   Mean   : 15.68   Mean   : 1.735  
+##  3rd Qu.: 0.000   T:  16   3rd Qu.: 25.00   3rd Qu.: 0.000  
+##  Max.   :30.000            Max.   :219.00   Max.   :71.800  
 ##                                                             
-##      STEMS2           HEIGHT2           SPP3           PLANTDATE3  
-##  Min.   :   0.00   Min.   : 0.00          :7702             :7736  
-##  1st Qu.:   0.00   1st Qu.: 0.00   BI     : 372   2003-09-30: 125  
-##  Median :   0.00   Median : 0.00   OB     : 254   2004-09-30: 120  
-##  Mean   :  40.17   Mean   : 1.78   ASH    : 246   2002-09-30: 115  
-##  3rd Qu.:   0.00   3rd Qu.: 0.00   BE     : 236   2005-09-30: 101  
-##  Max.   :3245.00   Max.   :40.00   SAL    : 222   2006-09-30:  99  
-##                                    (Other):1314   (Other)   :2050  
-##       PYR3           PYRTYPE3       CANOPY3            YC3         
-##  Min.   :   0.0          :7722   Min.   : 0.000   Min.   : 0.0000  
-##  1st Qu.:   0.0   E      :1228   1st Qu.: 0.000   1st Qu.: 0.0000  
-##  Median :   0.0   W      : 732   Median : 0.000   Median : 0.0000  
-##  Mean   : 500.1   R      : 545   Mean   : 2.128   Mean   : 0.4172  
-##  3rd Qu.:1880.0   T      :  54   3rd Qu.: 1.000   3rd Qu.: 0.0000  
-##  Max.   :2019.0   M      :  48   Max.   :38.000   Max.   :26.0000  
-##                   (Other):  17                                     
-##  YCTYPE3       AGE3           MEAN_DBH3           STEMS3        
-##   :9956   Min.   :  0.000   Min.   : 0.0000   Min.   :   0.000  
-##  C:   1   1st Qu.:  0.000   1st Qu.: 0.0000   1st Qu.:   0.000  
-##  L:   1   Median :  0.000   Median : 0.0000   Median :   0.000  
-##  N: 386   Mean   :  9.223   Mean   : 0.9144   Mean   :   8.328  
-##  T:   2   3rd Qu.:  3.000   3rd Qu.: 0.0000   3rd Qu.:   0.000  
-##           Max.   :219.000   Max.   :62.0000   Max.   :2900.000  
-##                                                                 
-##     HEIGHT3             SPP4           PLANTDATE4        PYR4       
-##  Min.   : 0.0000          :9172             :9182   Min.   :   0.0  
-##  1st Qu.: 0.0000   OB     : 288   2003-09-30:  76   1st Qu.:   0.0  
-##  Median : 0.0000   BI     : 118   2004-09-30:  72   Median :   0.0  
-##  Mean   : 0.7147   BE     :  87   2006-09-30:  54   Mean   : 223.1  
-##  3rd Qu.: 0.0000   SAL    :  78   2002-09-30:  52   3rd Qu.:   0.0  
-##  Max.   :32.0000   ASH    :  76   2005-09-30:  47   Max.   :2018.0  
-##                    (Other): 527   (Other)   : 863                   
-##     PYRTYPE4       CANOPY4             YC4          YCTYPE4  
-##         :9174   Min.   : 0.0000   Min.   : 0.0000    :10112  
-##  E      : 510   1st Qu.: 0.0000   1st Qu.: 0.0000   N:  234  
-##  W      : 380   Median : 0.0000   Median : 0.0000            
-##  R      : 212   Mean   : 0.6958   Mean   : 0.2016            
-##  M      :  36   3rd Qu.: 0.0000   3rd Qu.: 0.0000            
-##  T      :  28   Max.   :29.0000   Max.   :22.0000            
-##  (Other):   6                                                
-##       AGE4           MEAN_DBH4           STEMS4            HEIGHT4       
-##  Min.   :  0.000   Min.   : 0.0000   Min.   :   0.000   Min.   : 0.0000  
-##  1st Qu.:  0.000   1st Qu.: 0.0000   1st Qu.:   0.000   1st Qu.: 0.0000  
-##  Median :  0.000   Median : 0.0000   Median :   0.000   Median : 0.0000  
-##  Mean   :  4.037   Mean   : 0.3999   Mean   :   2.317   Mean   : 0.3222  
-##  3rd Qu.:  0.000   3rd Qu.: 0.0000   3rd Qu.:   0.000   3rd Qu.: 0.0000  
-##  Max.   :169.000   Max.   :65.9000   Max.   :4000.000   Max.   :35.0000  
-##                                                                          
-##       MODIFIEDON      BL_COMMENT        BA1              BA2        
-##  2019-01-11:10346   None   :9372   Min.   : 0.000   Min.   : 0.000  
-##                            : 216   1st Qu.: 0.000   1st Qu.: 0.000  
-##                     BNC16  : 195   Median : 0.000   Median : 0.000  
-##                     BNC17  : 145   Mean   : 9.445   Mean   : 1.002  
-##                     BND16  : 116   3rd Qu.:14.828   3rd Qu.: 0.000  
-##                     NONE   :  63   Max.   :97.800   Max.   :98.680  
-##                     (Other): 239                                    
-##       BA3               BA4             SHAPE_STAr         SHAPE_STLe    
-##  Min.   : 0.0000   Min.   : 0.00000   Min.   :   134.3   Min.   :  59.6  
-##  1st Qu.: 0.0000   1st Qu.: 0.00000   1st Qu.:  9945.7   1st Qu.: 501.8  
-##  Median : 0.0000   Median : 0.00000   Median : 20304.4   Median : 757.3  
-##  Mean   : 0.1902   Mean   : 0.04546   Mean   : 36030.9   Mean   : 926.5  
-##  3rd Qu.: 0.0000   3rd Qu.: 0.00000   3rd Qu.: 44312.7   3rd Qu.:1180.5  
-##  Max.   :65.0700   Max.   :61.49000   Max.   :824081.5   Max.   :7630.9  
-##                                                                          
-##  COM_SUB       
-##  Mode:logical  
-##  NA's:10346    
-##                
-##                
-##                
-##                
+##      stems2          height2            ba2                spp3     
+##  Min.   :   0.0   Min.   : 0.000   Min.   :  0.0000          :5484  
+##  1st Qu.:   0.0   1st Qu.: 0.000   1st Qu.:  0.0000   BI     : 235  
+##  Median :   0.0   Median : 0.000   Median :  0.0000   ASH    : 170  
+##  Mean   :  28.4   Mean   : 1.383   Mean   :  0.9171   SAL    : 142  
+##  3rd Qu.:   0.0   3rd Qu.: 0.000   3rd Qu.:  0.0000   OB     : 140  
+##  Max.   :2460.0   Max.   :35.000   Max.   :191.0000   ALD    : 137  
+##                                                       (Other): 723  
+##       plantdate3        pyr3         pyrtype3       canopy3      
+##            :5517   Min.   :   0          :5486   Min.   : 0.000  
+##  2002-09-30:  78   1st Qu.:   0   E      : 840   1st Qu.: 0.000  
+##  2004-09-30:  71   Median :   0   R      : 321   Median : 0.000  
+##  2003-09-30:  69   Mean   : 427   W      : 311   Mean   : 1.885  
+##  2005-09-30:  55   3rd Qu.:   0   M      :  29   3rd Qu.: 0.000  
+##  2006-09-30:  54   Max.   :2018   T      :  28   Max.   :38.000  
+##  (Other)   :1187                  (Other):  16                   
+##       yc3          yctype3       age3           mean_dbh3      
+##  Min.   : 0.0000    :6850   Min.   :  0.000   Min.   : 0.0000  
+##  1st Qu.: 0.0000   C:   1   1st Qu.:  0.000   1st Qu.: 0.0000  
+##  Median : 0.0000   L:   1   Median :  0.000   Median : 0.0000  
+##  Mean   : 0.2406   N: 177   Mean   :  7.778   Mean   : 0.7476  
+##  3rd Qu.: 0.0000   T:   2   3rd Qu.:  0.000   3rd Qu.: 0.0000  
+##  Max.   :22.0000            Max.   :219.000   Max.   :60.0000  
+##                                                                
+##      stems3            height3             ba3               spp4     
+##  Min.   :   0.000   Min.   : 0.0000   Min.   : 0.0000          :6407  
+##  1st Qu.:   0.000   1st Qu.: 0.0000   1st Qu.: 0.0000   OB     : 174  
+##  Median :   0.000   Median : 0.0000   Median : 0.0000   BI     :  61  
+##  Mean   :   5.831   Mean   : 0.5638   Mean   : 0.1757   ASH    :  54  
+##  3rd Qu.:   0.000   3rd Qu.: 0.0000   3rd Qu.: 0.0000   BE     :  49  
+##  Max.   :2550.000   Max.   :28.0000   Max.   :58.0000   ALD    :  38  
+##                                                         (Other): 248  
+##       plantdate4        pyr4           pyrtype4       canopy4       
+##            :6422   Min.   :   0.0          :6408   Min.   : 0.0000  
+##  2003-09-30:  35   1st Qu.:   0.0   E      : 343   1st Qu.: 0.0000  
+##  2002-09-30:  33   Median :   0.0   W      : 155   Median : 0.0000  
+##  2006-09-30:  30   Mean   : 171.6   R      :  99   Mean   : 0.5369  
+##  2005-09-30:  29   3rd Qu.:   0.0   T      :  12   3rd Qu.: 0.0000  
+##  2004-09-30:  28   Max.   :2018.0   M      :  11   Max.   :20.0000  
+##  (Other)   : 454                    (Other):   3                    
+##       yc4         yctype4       age4           mean_dbh4      
+##  Min.   : 0.000    :6931   Min.   :  0.000   Min.   : 0.0000  
+##  1st Qu.: 0.000   N:  99   1st Qu.:  0.000   1st Qu.: 0.0000  
+##  Median : 0.000   T:   1   Median :  0.000   Median : 0.0000  
+##  Mean   : 0.107            Mean   :  3.249   Mean   : 0.2775  
+##  3rd Qu.: 0.000            3rd Qu.:  0.000   3rd Qu.: 0.0000  
+##  Max.   :18.000            Max.   :139.000   Max.   :44.0000  
+##                                                               
+##      stems4            height4             ba4                modifiedon  
+##  Min.   :   0.000   Min.   : 0.0000   Min.   : 0.00000   2018-07-03:7031  
+##  1st Qu.:   0.000   1st Qu.: 0.0000   1st Qu.: 0.00000                    
+##  Median :   0.000   Median : 0.0000   Median : 0.00000                    
+##  Mean   :   2.158   Mean   : 0.2289   Mean   : 0.03769                    
+##  3rd Qu.:   0.000   3rd Qu.: 0.0000   3rd Qu.: 0.00000                    
+##  Max.   :4000.000   Max.   :30.2000   Max.   :48.00000                    
+##                                                                           
+##    shape_star         shape_stle      com_sub       
+##  Min.   :   287.7   Min.   :  78.43   Mode:logical  
+##  1st Qu.: 10160.0   1st Qu.: 504.80   NA's:7031     
+##  Median : 21127.9   Median : 773.46                 
+##  Mean   : 38290.6   Mean   : 949.45                 
+##  3rd Qu.: 48273.6   3rd Qu.:1216.48                 
+##  Max.   :636476.7   Max.   :7782.06                 
 ## </code></pre>
 <p>Extract subsets for summaries. Firstly for a specific field, note that you identify a field using the “$” and then the field name. Secondly, select the first five columns, using [1:5]</p>
 <pre class="r"><code>summary(scdb$SURVEY_YEA)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    1975    2001    2009    2007    2014    2018</code></pre>
+<pre><code>## Length  Class   Mode 
+##      0   NULL   NULL</code></pre>
 <pre class="r"><code>summary(scdb[1:5])</code></pre>
-<pre><code>##     OBJECTID        FOREST_COD     COMPARTMEN        SUBID       
-##  Min.   :   802   KK06   : 849   22054H :   29   Min.   : 1.000  
-##  1st Qu.: 14453   CW03   : 719   17015S :   28   1st Qu.: 2.000  
-##  Median : 17336   WX04   : 561   77877A :   25   Median : 4.000  
-##  Mean   : 55963   LS08   : 547   21300V :   23   Mean   : 4.799  
-##  3rd Qu.:120743   LS01   : 537   21301Q :   23   3rd Qu.: 7.000  
-##  Max.   :161231   TY14   : 528   21302L :   22   Max.   :31.000  
-##                   (Other):6605   (Other):10196                   
-##     GIS_AREA     
-##  Min.   : 0.010  
-##  1st Qu.: 0.990  
-##  Median : 2.030  
-##  Mean   : 3.603  
-##  3rd Qu.: 4.430  
-##  Max.   :82.410  
+<pre><code>##     objectid        forest_cod     compartmen       subid       
+##  Min.   :  7156   TY12   : 652   22054H :  29   Min.   : 1.000  
+##  1st Qu.: 17282   LS09   : 584   77877A :  23   1st Qu.: 2.000  
+##  Median :118542   LS08   : 530   21763L :  22   Median : 4.000  
+##  Mean   : 79114   KK02   : 508   75133R :  20   Mean   : 4.531  
+##  3rd Qu.:121052   OY07   : 427   22055C :  19   3rd Qu.: 6.000  
+##  Max.   :130719   LS06   : 342   22064B :  18   Max.   :31.000  
+##                   (Other):3988   (Other):6900                   
+##     gis_area     
+##  Min.   : 0.030  
+##  1st Qu.: 1.020  
+##  Median : 2.110  
+##  Mean   : 3.829  
+##  3rd Qu.: 4.830  
+##  Max.   :63.650  
 ## </code></pre>
 <p>Note, summarise only the first 30 rows, note the use of the comma:</p>
 <pre class="r"><code>summary(scdb[1:30,])</code></pre>
-<pre><code>##     OBJECTID        FOREST_COD   COMPARTMEN     SUBID       
-##  Min.   :  7183   OY07   :20   75018L :8    Min.   : 1.000  
-##  1st Qu.: 11030   CW03   : 4   75022M :5    1st Qu.: 1.250  
-##  Median :118474   WX06   : 4   17075F :4    Median : 4.000  
-##  Mean   : 82402   KE03   : 2   17172N :4    Mean   : 4.467  
-##  3rd Qu.:118498   CW01   : 0   75019G :4    3rd Qu.: 6.000  
-##  Max.   :118713   KE04   : 0   15016G :2    Max.   :15.000  
-##                   (Other): 0   (Other):3                    
-##     GIS_AREA           LUT       SURVEY_YEA     PRODUCTIVE    
-##  Min.   : 0.570   CHF    :25   Min.   :1999   Min.   :  0.00  
-##  1st Qu.: 1.452   BHF    : 2   1st Qu.:2012   1st Qu.: 85.00  
-##  Median : 2.955   MHF    : 2   Median :2013   Median : 95.00  
-##  Mean   : 4.503   FELLED : 1   Mean   :2012   Mean   : 86.93  
-##  3rd Qu.: 5.992   BAREMG : 0   3rd Qu.:2016   3rd Qu.: 99.00  
-##  Max.   :18.600   BAREPL : 0   Max.   :2018   Max.   :100.00  
-##                   (Other): 0                                  
-##      CONST    MIX_TYPE    AVG_SPACIN      ESTB_STEMS       BA_METHOD
-##  NONE   :29       :17   Min.   :0.000   Min.   :   0.0   LIDAR  :9  
-##  OTHER  : 1   INT :12   1st Qu.:0.000   1st Qu.:   0.0   NONE   :8  
-##  AMNTY  : 0   NINT: 1   Median :1.850   Median :   0.0   PLOT   :7  
-##  ARBOR  : 0   NONE: 0   Mean   :1.307   Mean   : 476.8   OCULAR :4  
-##  BIOD   : 0             3rd Qu.:2.075   3rd Qu.:   0.0   FDCFEL :1  
-##  CONSVN : 0             Max.   :5.300   Max.   :2589.0   FDCPLT :1  
-##  (Other): 0                                              (Other):0  
-##        BA_DATE     DEAD_FALL     DEAD_STAND     DEAD_SURVE
-##            :17   Min.   :0.0   Min.   : 0.000    : 0      
-##  2015-10-29: 4   1st Qu.:0.0   1st Qu.: 0.000   N:10      
-##  2018-03-26: 4   Median :0.0   Median : 0.000   Y:20      
-##  2017-07-01: 2   Mean   :0.2   Mean   : 3.067             
-##  2014-09-08: 1   3rd Qu.:0.0   3rd Qu.: 0.000             
-##  2015-12-17: 1   Max.   :5.0   Max.   :41.000             
-##  (Other)   : 1                                            
-##                                                       COMMENTS 
-##                                                           :30  
-##  24092018 BLOWN in part.                                  : 0  
-##  24092018 reinstated older data 1983 stocks               : 0  
-##  a lot of regen larch in parts .some parts nseed fertlizer: 0  
-##  area of sub not felled mostly scrubb                     : 0  
-##  blow                                                     : 0  
-##  (Other)                                                  : 0  
-##       SPP1         PLANTDATE1      PYR1         PYRTYPE1     CANOPY1      
-##  SS     :20   1987-09-30: 5   Min.   :   0   R      :18   Min.   :  0.00  
-##  NS     : 4   1998-09-30: 4   1st Qu.:1987   E      : 7   1st Qu.: 89.50  
-##  ALD    : 2   2010-09-30: 4   Median :1998   T      : 4   Median :100.00  
-##         : 1   1994-09-30: 3   Mean   :1928          : 1   Mean   : 90.37  
-##  DF     : 1   1964-09-30: 2   3rd Qu.:2004   A      : 0   3rd Qu.:100.00  
-##  JL     : 1   1999-09-30: 2   Max.   :2017   M      : 0   Max.   :100.00  
-##  (Other): 1   (Other)   :10                  (Other): 0                   
-##       YC1       YCTYPE1      AGE1        MEAN_DBH1          STEMS1      
-##  Min.   : 0.0    :10    Min.   : 0.0   Min.   : 0.000   Min.   :   0.0  
-##  1st Qu.:10.5   C: 2    1st Qu.:10.5   1st Qu.: 0.000   1st Qu.:   0.0  
-##  Median :16.0   L: 9    Median :21.0   Median : 0.000   Median :   0.0  
-##  Mean   :16.0   N: 9    Mean   :23.5   Mean   : 7.527   Mean   : 642.6  
-##  3rd Qu.:22.0   T: 0    3rd Qu.:32.0   3rd Qu.:15.225   3rd Qu.:1495.8  
-##  Max.   :28.0           Max.   :73.0   Max.   :35.100   Max.   :2166.0  
-##                                                                         
-##     HEIGHT1           SPP2         PLANTDATE2      PYR2       
-##  Min.   : 0.00          :17             :17   Min.   :   0.0  
-##  1st Qu.: 0.00   ASH    : 3   1999-09-30: 3   1st Qu.:   0.0  
-##  Median : 0.00   JL     : 3   2010-09-30: 2   Median :   0.0  
-##  Mean   : 6.44   BE     : 1   1900-09-30: 1   Mean   : 861.3  
-##  3rd Qu.:11.75   BI     : 1   1946-09-30: 1   3rd Qu.:1998.8  
-##  Max.   :28.50   DF     : 1   1970-09-30: 1   Max.   :2010.0  
-##                  (Other): 4   (Other)   : 5                   
-##     PYRTYPE2     CANOPY2          YC2         YCTYPE2      AGE2      
-##         :17   Min.   : 0.0   Min.   : 0.000    :27    Min.   :  0.0  
-##  W      : 5   1st Qu.: 0.0   1st Qu.: 0.000   C: 0    1st Qu.:  0.0  
-##  E      : 4   Median : 0.0   Median : 0.000   L: 0    Median :  0.0  
-##  R      : 3   Mean   : 4.2   Mean   : 1.267   N: 3    Mean   : 13.6  
-##  T      : 1   3rd Qu.: 5.0   3rd Qu.: 0.000   T: 0    3rd Qu.: 19.0  
-##  A      : 0   Max.   :30.0   Max.   :14.000           Max.   :119.0  
-##  (Other): 0                                                          
-##    MEAN_DBH2          STEMS2          HEIGHT2            SPP3   
-##  Min.   : 0.000   Min.   :  0.00   Min.   : 0.000          :22  
-##  1st Qu.: 0.000   1st Qu.:  0.00   1st Qu.: 0.000   LPS    : 3  
-##  Median : 0.000   Median :  0.00   Median : 0.000   OB     : 2  
-##  Mean   : 2.937   Mean   : 35.77   Mean   : 2.233   ASH    : 1  
-##  3rd Qu.: 0.000   3rd Qu.:  0.00   3rd Qu.: 0.000   JL     : 1  
-##  Max.   :53.100   Max.   :816.00   Max.   :22.000   OAK    : 1  
-##                                                     (Other): 0  
-##       PLANTDATE3      PYR3           PYRTYPE3     CANOPY3      
-##            :22   Min.   :   0.0          :22   Min.   : 0.000  
-##  1998-09-30: 2   1st Qu.:   0.0   E      : 5   1st Qu.: 0.000  
-##  2007-09-30: 2   Median :   0.0   W      : 3   Median : 0.000  
-##  1930-09-30: 1   Mean   : 529.4   A      : 0   Mean   : 1.933  
-##  1946-09-30: 1   3rd Qu.:1447.5   M      : 0   3rd Qu.: 1.500  
-##  1987-09-30: 1   Max.   :2010.0   R      : 0   Max.   :14.000  
-##  (Other)   : 1                    (Other): 0                   
-##       YC3      YCTYPE3      AGE3          MEAN_DBH3          STEMS3      
-##  Min.   :0.0    :29    Min.   : 0.000   Min.   : 0.000   Min.   : 0.000  
-##  1st Qu.:0.0   C: 0    1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: 0.000  
-##  Median :0.0   L: 0    Median : 0.000   Median : 0.000   Median : 0.000  
-##  Mean   :0.4   N: 1    Mean   : 8.967   Mean   : 1.747   Mean   : 2.233  
-##  3rd Qu.:0.0   T: 0    3rd Qu.: 6.750   3rd Qu.: 0.000   3rd Qu.: 0.000  
-##  Max.   :8.0           Max.   :89.000   Max.   :29.400   Max.   :40.000  
+<pre><code>##     objectid       forest_cod   compartmen     subid          gis_area    
+##  Min.   :17184   KK02   :23   22054H :22   Min.   : 1.00   Min.   :0.390  
+##  1st Qu.:17273   KK06   : 7   21919U : 6   1st Qu.: 6.25   1st Qu.:0.850  
+##  Median :17280   CW01   : 0   21920N : 1   Median :13.50   Median :1.255  
+##  Mean   :17261   KE03   : 0   22055C : 1   Mean   :14.73   Mean   :1.599  
+##  3rd Qu.:17288   KE04   : 0   15004W : 0   3rd Qu.:22.75   3rd Qu.:2.190  
+##  Max.   :17295   KK01   : 0   15007H : 0   Max.   :31.00   Max.   :4.620  
+##                  (Other): 0   (Other): 0                                  
+##       lut       survey_yea     productive         const    mix_type 
+##  CHF    :12   Min.   :1985   Min.   :  0.00   NONE   :29       :11  
+##  MHF    : 6   1st Qu.:1997   1st Qu.:  7.50   BIOD   : 1   INT :18  
+##  SCRUB  : 5   Median :2002   Median : 80.00   AMNTY  : 0   NINT: 1  
+##  BHF    : 4   Mean   :2002   Mean   : 63.67   CONSVN : 0            
+##  FELLED : 3   3rd Qu.:2004   3rd Qu.:100.00   ESB    : 0            
+##  BAREMG : 0   Max.   :2018   Max.   :100.00   EXPT   : 0            
+##  (Other): 0                                   (Other): 0            
+##    avg_spacin    estb_stems        ba_method        ba_date  
+##  Min.   :0.0   Min.   :   0.00   NONE   :24             :25  
+##  1st Qu.:0.0   1st Qu.:   0.00   FDCFEL : 3   2018-03-12: 3  
+##  Median :0.0   Median :   0.00   PLOT   : 2   2010-02-11: 1  
+##  Mean   :0.2   Mean   :  74.33   SWEEP  : 1   2011-06-16: 1  
+##  3rd Qu.:0.0   3rd Qu.:   0.00   EOFELL : 0   2000-01-01: 0  
+##  Max.   :2.0   Max.   :2230.00   FDC4YR : 0   2003-01-01: 0  
+##                                  (Other): 0   (Other)   : 0  
+##    dead_fall      dead_stand dead_surve
+##  Min.   : 0.0   Min.   : 0    : 0      
+##  1st Qu.: 0.0   1st Qu.: 0   N:21      
+##  Median : 0.0   Median : 0   Y: 9      
+##  Mean   : 0.5   Mean   : 3             
+##  3rd Qu.: 0.0   3rd Qu.: 0             
+##  Max.   :10.0   Max.   :60             
+##                                        
+##                             comments       spp1         plantdate1
+##                                 :30   SS     :12             : 8  
+##  EOFELL 01/05/2018              : 0   ASH    : 7   1983-09-30: 3  
+##  FDCFEL 21/05/2018              : 0          : 3   1989-09-30: 3  
+##  Realigned to HB boundary       : 0   OB     : 2   1963-09-30: 2  
+##  Realigned to HB boundary after : 0   BE     : 1   1982-09-30: 2  
+##                                       BI     : 1   1992-09-30: 2  
+##                                       (Other): 4   (Other)   :10  
+##       pyr1           pyrtype1     canopy1           yc1         yctype1
+##  Min.   :   0.0   E      :15   Min.   :  0.0   Min.   : 0.000    :22   
+##  1st Qu.: 490.8   R      : 8   1st Qu.: 52.5   1st Qu.: 0.000   C: 0   
+##  Median :1983.0   W      : 4   Median : 90.0   Median :12.000   L: 0   
+##  Mean   :1457.5          : 3   Mean   : 71.8   Mean   : 9.867   N: 6   
+##  3rd Qu.:1991.8   A      : 0   3rd Qu.: 99.5   3rd Qu.:18.000   T: 2   
+##  Max.   :2003.0   M      : 0   Max.   :100.0   Max.   :26.000          
+##                   (Other): 0                                           
+##       age1         mean_dbh1          stems1        height1       
+##  Min.   : 0.00   Min.   : 0.000   Min.   :   0   Min.   : 0.0000  
+##  1st Qu.: 4.00   1st Qu.: 0.000   1st Qu.:   0   1st Qu.: 0.0000  
+##  Median :27.00   Median : 0.000   Median :   0   Median : 0.0000  
+##  Mean   :23.07   Mean   : 1.123   Mean   :  68   Mean   : 0.9667  
+##  3rd Qu.:35.75   3rd Qu.: 0.000   3rd Qu.:   0   3rd Qu.: 0.0000  
+##  Max.   :56.00   Max.   :18.100   Max.   :1503   Max.   :18.0000  
+##                                                                   
+##       ba1              spp2         plantdate2      pyr2         pyrtype2 
+##  Min.   : 0.000          :11             :13   Min.   :   0          :11  
+##  1st Qu.: 0.000   ASH    : 4   1983-09-30: 3   1st Qu.:   0   E      :10  
+##  Median : 0.000   BI     : 4   1984-09-30: 3   Median :1963   W      : 5  
+##  Mean   : 1.433   BE     : 2   1963-09-30: 2   Mean   :1124   R      : 4  
+##  3rd Qu.: 0.000   LPS    : 2   1997-09-30: 2   3rd Qu.:1984   A      : 0  
+##  Max.   :29.000   SS     : 2   1960-09-30: 1   Max.   :2003   M      : 0  
+##                   (Other): 5   (Other)   : 6                  (Other): 0  
+##     canopy2           yc2         yctype2      age2         mean_dbh2    
+##  Min.   : 0.00   Min.   : 0.000    :28    Min.   : 0.00   Min.   : 0.00  
+##  1st Qu.: 0.00   1st Qu.: 0.000   C: 0    1st Qu.: 0.00   1st Qu.: 0.00  
+##  Median : 7.50   Median : 0.000   L: 0    Median :22.00   Median : 0.00  
+##  Mean   :12.30   Mean   : 2.733   N: 2    Mean   :20.23   Mean   : 1.17  
+##  3rd Qu.:19.25   3rd Qu.: 0.000   T: 0    3rd Qu.:35.00   3rd Qu.: 0.00  
+##  Max.   :50.00   Max.   :26.000           Max.   :59.00   Max.   :20.10  
 ##                                                                          
-##     HEIGHT3           SPP4         PLANTDATE4      PYR4        
-##  Min.   : 0.00          :29             :29   Min.   :   0.00  
-##  1st Qu.: 0.00   JL     : 1   1966-09-30: 1   1st Qu.:   0.00  
-##  Median : 0.00   ALD    : 0   1850-09-30: 0   Median :   0.00  
-##  Mean   : 1.34   ASH    : 0   1870-09-30: 0   Mean   :  65.53  
-##  3rd Qu.: 0.00   BE     : 0   1880-09-30: 0   3rd Qu.:   0.00  
-##  Max.   :19.20   BI     : 0   1890-09-30: 0   Max.   :1966.00  
-##                  (Other): 0   (Other)   : 0                    
-##     PYRTYPE4     CANOPY4            YC4    YCTYPE4      AGE4       
-##         :29   Min.   :0.0000   Min.   :0    :30    Min.   : 0.000  
-##  E      : 1   1st Qu.:0.0000   1st Qu.:0   N: 0    1st Qu.: 0.000  
-##  A      : 0   Median :0.0000   Median :0           Median : 0.000  
-##  M      : 0   Mean   :0.1667   Mean   :0           Mean   : 1.767  
-##  R      : 0   3rd Qu.:0.0000   3rd Qu.:0           3rd Qu.: 0.000  
-##  T      : 0   Max.   :5.0000   Max.   :0           Max.   :53.000  
-##  (Other): 0                                                        
-##    MEAN_DBH4     STEMS4     HEIGHT4       MODIFIEDON   BL_COMMENT
-##  Min.   :0   Min.   :0   Min.   :0   2019-01-11:30   None   :29  
-##  1st Qu.:0   1st Qu.:0   1st Qu.:0                   NONE   : 1  
-##  Median :0   Median :0   Median :0                          : 0  
-##  Mean   :0   Mean   :0   Mean   :0                   BNC    : 0  
-##  3rd Qu.:0   3rd Qu.:0   3rd Qu.:0                   BNC16  : 0  
-##  Max.   :0   Max.   :0   Max.   :0                   BNC17  : 0  
-##                                                      (Other): 0  
-##       BA1             BA2              BA3             BA4   
-##  Min.   : 0.00   Min.   :0.0000   Min.   :0.000   Min.   :0  
-##  1st Qu.: 0.00   1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:0  
-##  Median : 0.00   Median :0.0000   Median :0.000   Median :0  
-##  Mean   :15.91   Mean   :0.4357   Mean   :0.128   Mean   :0  
-##  3rd Qu.:31.91   3rd Qu.:0.0000   3rd Qu.:0.000   3rd Qu.:0  
-##  Max.   :57.05   Max.   :6.4100   Max.   :2.720   Max.   :0  
-##                                                              
-##    SHAPE_STAr       SHAPE_STLe     COM_SUB       
-##  Min.   :  5732   Min.   : 434.2   Mode:logical  
-##  1st Qu.: 14531   1st Qu.: 569.8   NA's:30       
-##  Median : 29532   Median : 870.6                 
-##  Mean   : 45025   Mean   :1088.5                 
-##  3rd Qu.: 59923   3rd Qu.:1476.6                 
-##  Max.   :185952   Max.   :2574.4                 
+##      stems2          height2             ba2           spp3   
+##  Min.   :  0.00   Min.   : 0.0000   Min.   :0.0          :22  
+##  1st Qu.:  0.00   1st Qu.: 0.0000   1st Qu.:0.0   ASH    : 4  
+##  Median :  0.00   Median : 0.0000   Median :0.0   BI     : 1  
+##  Mean   : 17.17   Mean   : 0.7833   Mean   :0.3   NS     : 1  
+##  3rd Qu.:  0.00   3rd Qu.: 0.0000   3rd Qu.:0.0   OAK    : 1  
+##  Max.   :500.00   Max.   :13.5000   Max.   :9.0   SS     : 1  
+##                                                   (Other): 0  
+##       plantdate3      pyr3           pyrtype3     canopy3      
+##            :22   Min.   :   0.0          :22   Min.   : 0.000  
+##  1963-09-30: 2   1st Qu.:   0.0   E      : 6   1st Qu.: 0.000  
+##  1949-09-30: 1   Median :   0.0   W      : 2   Median : 0.000  
+##  1960-09-30: 1   Mean   : 525.7   A      : 0   Mean   : 3.933  
+##  1981-09-30: 1   3rd Qu.:1461.8   M      : 0   3rd Qu.: 7.500  
+##  1982-09-30: 1   Max.   :1988.0   R      : 0   Max.   :20.000  
+##  (Other)   : 2                    (Other): 0                   
+##       yc3      yctype3      age3         mean_dbh3           stems3    
+##  Min.   :0.0    :29    Min.   : 0.00   Min.   : 0.0000   Min.   : 0.0  
+##  1st Qu.:0.0   C: 0    1st Qu.: 0.00   1st Qu.: 0.0000   1st Qu.: 0.0  
+##  Median :0.0   L: 0    Median : 0.00   Median : 0.0000   Median : 0.0  
+##  Mean   :0.2   N: 1    Mean   :12.73   Mean   : 0.4667   Mean   : 1.3  
+##  3rd Qu.:0.0   T: 0    3rd Qu.:23.25   3rd Qu.: 0.0000   3rd Qu.: 0.0  
+##  Max.   :6.0           Max.   :70.00   Max.   :14.0000   Max.   :39.0  
+##                                                                        
+##     height3             ba3               spp4         plantdate4
+##  Min.   : 0.0000   Min.   :0.00000          :25             :25  
+##  1st Qu.: 0.0000   1st Qu.:0.00000   ALD    : 1   1963-09-30: 2  
+##  Median : 0.0000   Median :0.00000   DF     : 1   1900-09-30: 1  
+##  Mean   : 0.3333   Mean   :0.03333   JL     : 1   1982-09-30: 1  
+##  3rd Qu.: 0.0000   3rd Qu.:0.00000   OAK    : 1   1985-09-30: 1  
+##  Max.   :10.0000   Max.   :1.00000   OB     : 1   1880-09-30: 0  
+##                                      (Other): 0   (Other)   : 0  
+##       pyr4           pyrtype4     canopy4            yc4          yctype4
+##  Min.   :   0.0          :25   Min.   : 0.000   Min.   : 0.0000    :29   
+##  1st Qu.:   0.0   E      : 4   1st Qu.: 0.000   1st Qu.: 0.0000   N: 1   
+##  Median :   0.0   W      : 1   Median : 0.000   Median : 0.0000   T: 0   
+##  Mean   : 326.4   A      : 0   Mean   : 1.967   Mean   : 0.4667          
+##  3rd Qu.:   0.0   M      : 0   3rd Qu.: 0.000   3rd Qu.: 0.0000          
+##  Max.   :1985.0   R      : 0   Max.   :20.000   Max.   :10.0000          
+##                   (Other): 0                                             
+##       age4          mean_dbh4           stems4          height4      
+##  Min.   :  0.00   Min.   : 0.0000   Min.   : 0.000   Min.   :0.0000  
+##  1st Qu.:  0.00   1st Qu.: 0.0000   1st Qu.: 0.000   1st Qu.:0.0000  
+##  Median :  0.00   Median : 0.0000   Median : 0.000   Median :0.0000  
+##  Mean   : 10.07   Mean   : 0.4333   Mean   : 1.267   Mean   :0.2667  
+##  3rd Qu.:  0.00   3rd Qu.: 0.0000   3rd Qu.: 0.000   3rd Qu.:0.0000  
+##  Max.   :119.00   Max.   :13.0000   Max.   :38.000   Max.   :8.0000  
+##                                                                      
+##       ba4               modifiedon   shape_star      shape_stle    
+##  Min.   :0.00000   2018-07-03:30   Min.   : 3867   Min.   : 284.6  
+##  1st Qu.:0.00000                   1st Qu.: 8475   1st Qu.: 446.3  
+##  Median :0.00000                   Median :12544   Median : 538.3  
+##  Mean   :0.03333                   Mean   :15998   Mean   : 643.6  
+##  3rd Qu.:0.00000                   3rd Qu.:21931   3rd Qu.: 806.5  
+##  Max.   :1.00000                   Max.   :46191   Max.   :1644.2  
+##                                                                    
+##  com_sub       
+##  Mode:logical  
+##  NA's:30       
+##                
+##                
+##                
+##                
 ## </code></pre>
 </div>
 </div>
@@ -586,78 +631,78 @@ $(document).ready(function () {
 <h3>select() function</h3>
 <p>Let’s start by selecting 3 columns (area, plant year and species) to a new object (scdb_subset):</p>
 <pre class="r"><code>scdb %&gt;% 
-    select(GIS_AREA, PYR1, SPP1) -&gt; scdb_subset
+    select(gis_area, pyr1, spp1) -&gt; scdb_subset
 summary(scdb_subset)</code></pre>
-<pre><code>##     GIS_AREA           PYR1           SPP1     
-##  Min.   : 0.010   Min.   :   0   SS     :4961  
-##  1st Qu.: 0.990   1st Qu.:1972          : 765  
-##  Median : 2.030   Median :1990   NS     : 673  
-##  Mean   : 3.603   Mean   :1748   DF     : 612  
-##  3rd Qu.: 4.430   3rd Qu.:2002   JL     : 429  
-##  Max.   :82.410   Max.   :2019   LPS    : 417  
-##                                  (Other):2489</code></pre>
+<pre><code>##     gis_area           pyr1           spp1     
+##  Min.   : 0.030   Min.   :   0   SS     :3396  
+##  1st Qu.: 1.020   1st Qu.:1970   NS     : 677  
+##  Median : 2.110   Median :1989          : 503  
+##  Mean   : 3.829   Mean   :1728   LPS    : 354  
+##  3rd Qu.: 4.830   3rd Qu.:2002   BI     : 240  
+##  Max.   :63.650   Max.   :2018   BE     : 236  
+##                                  (Other):1625</code></pre>
 <p>You could do this in one step as follows:</p>
 <pre class="r"><code>scdb %&gt;% 
-  select(GIS_AREA, PYR1, SPP1) %&gt;% 
+  select(gis_area, pyr1, spp1) %&gt;% 
   summary()</code></pre>
-<pre><code>##     GIS_AREA           PYR1           SPP1     
-##  Min.   : 0.010   Min.   :   0   SS     :4961  
-##  1st Qu.: 0.990   1st Qu.:1972          : 765  
-##  Median : 2.030   Median :1990   NS     : 673  
-##  Mean   : 3.603   Mean   :1748   DF     : 612  
-##  3rd Qu.: 4.430   3rd Qu.:2002   JL     : 429  
-##  Max.   :82.410   Max.   :2019   LPS    : 417  
-##                                  (Other):2489</code></pre>
+<pre><code>##     gis_area           pyr1           spp1     
+##  Min.   : 0.030   Min.   :   0   SS     :3396  
+##  1st Qu.: 1.020   1st Qu.:1970   NS     : 677  
+##  Median : 2.110   Median :1989          : 503  
+##  Mean   : 3.829   Mean   :1728   LPS    : 354  
+##  3rd Qu.: 4.830   3rd Qu.:2002   BI     : 240  
+##  Max.   :63.650   Max.   :2018   BE     : 236  
+##                                  (Other):1625</code></pre>
 <p>More flexible select statements, for instance select all the species fields (i.e. SPP1, SPP2, SPP3, …) using the <strong>contains()</strong> helper function:</p>
 <pre class="r"><code>scdb %&gt;% 
-  select(COM_SUB, GIS_AREA, contains('SPP')) -&gt; scdb_subset_species
+  select(com_sub, gis_area, contains('spp')) -&gt; scdb_subset_species
 
 names(scdb_subset_species)</code></pre>
-<pre><code>## [1] &quot;COM_SUB&quot;  &quot;GIS_AREA&quot; &quot;SPP1&quot;     &quot;SPP2&quot;     &quot;SPP3&quot;     &quot;SPP4&quot;</code></pre>
+<pre><code>## [1] &quot;com_sub&quot;  &quot;gis_area&quot; &quot;spp1&quot;     &quot;spp2&quot;     &quot;spp3&quot;     &quot;spp4&quot;</code></pre>
 <p>Let’s suppose, you want to omit Species 4 from the above command:</p>
 <pre class="r"><code>scdb %&gt;% 
-  select(COM_SUB, GIS_AREA, contains('SPP'), -(SPP4)) %&gt;%
+  select(com_sub, gis_area, contains('spp'), -(spp4)) %&gt;%
   summary()</code></pre>
-<pre><code>##  COM_SUB           GIS_AREA           SPP1           SPP2     
-##  Mode:logical   Min.   : 0.010   SS     :4961          :4668  
-##  NA's:10346     1st Qu.: 0.990          : 765   BI     : 730  
-##                 Median : 2.030   NS     : 673   JL     : 715  
-##                 Mean   : 3.603   DF     : 612   SS     : 549  
-##                 3rd Qu.: 4.430   JL     : 429   ASH    : 446  
-##                 Max.   :82.410   LPS    : 417   LPS    : 442  
-##                                  (Other):2489   (Other):2796  
-##       SPP3     
-##         :7702  
-##  BI     : 372  
-##  OB     : 254  
-##  ASH    : 246  
-##  BE     : 236  
-##  SAL    : 222  
-##  (Other):1314</code></pre>
+<pre><code>##  com_sub           gis_area           spp1           spp2     
+##  Mode:logical   Min.   : 0.030   SS     :3396          :3505  
+##  NA's:7031      1st Qu.: 1.020   NS     : 677   BI     : 495  
+##                 Median : 2.110          : 503   JL     : 454  
+##                 Mean   : 3.829   LPS    : 354   SS     : 324  
+##                 3rd Qu.: 4.830   BI     : 240   ASH    : 303  
+##                 Max.   :63.650   BE     : 236   ALD    : 244  
+##                                  (Other):1625   (Other):1706  
+##       spp3     
+##         :5484  
+##  BI     : 235  
+##  ASH    : 170  
+##  SAL    : 142  
+##  OB     : 140  
+##  ALD    : 137  
+##  (Other): 723</code></pre>
 <p>Yet another way to achieve the same thing using the <strong>num_range()</strong> helper function</p>
 <pre class="r"><code>scdb %&gt;% 
-  select(COM_SUB, GIS_AREA, num_range('SPP',1:3)) %&gt;%
+  select(com_sub, gis_area, num_range('spp',1:3)) %&gt;%
   summary()</code></pre>
-<pre><code>##  COM_SUB           GIS_AREA           SPP1           SPP2     
-##  Mode:logical   Min.   : 0.010   SS     :4961          :4668  
-##  NA's:10346     1st Qu.: 0.990          : 765   BI     : 730  
-##                 Median : 2.030   NS     : 673   JL     : 715  
-##                 Mean   : 3.603   DF     : 612   SS     : 549  
-##                 3rd Qu.: 4.430   JL     : 429   ASH    : 446  
-##                 Max.   :82.410   LPS    : 417   LPS    : 442  
-##                                  (Other):2489   (Other):2796  
-##       SPP3     
-##         :7702  
-##  BI     : 372  
-##  OB     : 254  
-##  ASH    : 246  
-##  BE     : 236  
-##  SAL    : 222  
-##  (Other):1314</code></pre>
+<pre><code>##  com_sub           gis_area           spp1           spp2     
+##  Mode:logical   Min.   : 0.030   SS     :3396          :3505  
+##  NA's:7031      1st Qu.: 1.020   NS     : 677   BI     : 495  
+##                 Median : 2.110          : 503   JL     : 454  
+##                 Mean   : 3.829   LPS    : 354   SS     : 324  
+##                 3rd Qu.: 4.830   BI     : 240   ASH    : 303  
+##                 Max.   :63.650   BE     : 236   ALD    : 244  
+##                                  (Other):1625   (Other):1706  
+##       spp3     
+##         :5484  
+##  BI     : 235  
+##  ASH    : 170  
+##  SAL    : 142  
+##  OB     : 140  
+##  ALD    : 137  
+##  (Other): 723</code></pre>
 <p><strong>Exercise</strong>: What happens if you include a variable name twice in the select function?</p>
 <p>Let’s suppose that you want to move the above variables to the start of the data frame, than you can use the <strong>everything()</strong> function as follows:</p>
 <pre class="r"><code>scdb %&gt;% 
-  select(COM_SUB, GIS_AREA, num_range('SPP',1:3), everything()) %&gt;%
+  select(com_sub, gis_area, num_range('spp',1:3), everything()) %&gt;%
   summary()</code></pre>
 <p><strong>Exercise</strong>: Select all fields, but exclude all species fields</p>
 </div>
@@ -666,311 +711,295 @@ names(scdb_subset_species)</code></pre>
 <p><strong>filter()</strong> - pick observations by their values using specific expressions. The filter function is synonymous with queries in SQL.</p>
 <p>Let’s filter our data frame to retrieve all rows where the first species is Sitka spruce (SS):</p>
 <pre class="r"><code>scdb %&gt;% 
-  filter(SPP1 == 'SS') %&gt;% 
+  filter(spp1 == 'SS') %&gt;% 
   summary() </code></pre>
-<pre><code>##     OBJECTID        FOREST_COD     COMPARTMEN       SUBID       
-##  Min.   :  7165   KK06   : 404   22064B :  18   Min.   : 1.000  
-##  1st Qu.: 14802   CW03   : 390   21763L :  15   1st Qu.: 2.000  
-##  Median : 17418   WX04   : 352   17821W :  14   Median : 4.000  
-##  Mean   : 57601   LS08   : 331   21622B :  14   Mean   : 4.591  
-##  3rd Qu.:120780   KK02   : 312   17017I :  13   3rd Qu.: 6.000  
-##  Max.   :161231   LS01   : 311   21301Q :  13   Max.   :24.000  
-##                   (Other):2861   (Other):4874                   
-##     GIS_AREA           LUT         SURVEY_YEA     PRODUCTIVE    
-##  Min.   : 0.050   CHF    :4542   Min.   :1975   Min.   :  0.00  
-##  1st Qu.: 1.250   MHF    : 224   1st Qu.:2004   1st Qu.: 90.00  
-##  Median : 2.710   UNDEV  : 119   Median :2010   Median :100.00  
-##  Mean   : 4.317   BLOWN  :  51   Mean   :2009   Mean   : 88.86  
-##  3rd Qu.: 5.650   BURNED :  21   3rd Qu.:2013   3rd Qu.:100.00  
-##  Max.   :37.170   DEAD   :   2   Max.   :2018   Max.   :100.00  
-##                   (Other):   2                                  
-##      CONST      MIX_TYPE      AVG_SPACIN      ESTB_STEMS    
-##  NONE   :4803       :2452   Min.   :0.000   Min.   :   0.0  
-##  ESB    :  45   INT :2105   1st Qu.:0.000   1st Qu.:   0.0  
-##  WIND   :  24   NINT: 402   Median :1.700   Median :   0.0  
-##  SEEDST :  19   NONE:   2   Mean   :1.083   Mean   : 473.1  
-##  RIPA   :  16               3rd Qu.:2.000   3rd Qu.:   0.0  
-##  LEGAL  :  14               Max.   :4.500   Max.   :5050.0  
-##  (Other):  40                                               
-##    BA_METHOD          BA_DATE       DEAD_FALL         DEAD_STAND     
-##  NONE   :2213             :2934   Min.   :  0.000   Min.   :  0.000  
-##  PLOT   :1004   2015-10-01:  75   1st Qu.:  0.000   1st Qu.:  0.000  
-##  LIDAR  : 702   2017-07-01:  55   Median :  0.000   Median :  0.000  
-##  FDCPLT : 411   2015-02-12:  38   Mean   :  2.327   Mean   :  1.763  
-##  OCULAR : 253   2016-11-01:  38   3rd Qu.:  0.000   3rd Qu.:  0.000  
-##  FDC4YR : 214   2016-01-05:  36   Max.   :650.000   Max.   :700.000  
-##  (Other): 164   (Other)   :1785                                      
-##  DEAD_SURVE
-##   :   0    
-##  N:2513    
-##  Y:2448    
-##            
-##            
-##            
-##            
-##                                                                                                                   COMMENTS   
-##                                                                                                                       :4932  
-##  a lot of regen larch in parts .some parts nseed fertlizer                                                            :   2  
-##  BLOW                                                                                                                 :   2  
-##  Blown                                                                                                                :   2  
-##  Realigned to HB boundary after discussion with D Walsh - sub 4 should not have been entered as sub 1 was an IFUT sale:   2  
-##  ROW                                                                                                                  :   2  
-##  (Other)                                                                                                              :  19  
-##       SPP1           PLANTDATE1        PYR1         PYRTYPE1   
-##  SS     :4961   1988-09-30: 199   Min.   :   0   R      :3060  
-##         :   0   1989-09-30: 179   1st Qu.:1987   E      :1687  
-##  ALD    :   0   2004-09-30: 173   Median :1995   U      :  57  
-##  ASH    :   0   2017-09-30: 166   Mean   :1991   T      :  47  
-##  BE     :   0   1991-09-30: 160   3rd Qu.:2004          :  37  
-##  BI     :   0   1990-09-30: 155   Max.   :2019   M      :  28  
-##  (Other):   0   (Other)   :3929                  (Other):  45  
-##     CANOPY1            YC1        YCTYPE1       AGE1      
-##  Min.   :  0.00   Min.   : 0.00    :1807   Min.   : 0.00  
-##  1st Qu.: 89.00   1st Qu.:16.00   C:  21   1st Qu.:15.00  
-##  Median : 98.00   Median :18.00   L: 761   Median :24.00  
-##  Mean   : 91.22   Mean   :18.06   N:2241   Mean   :23.89  
-##  3rd Qu.:100.00   3rd Qu.:20.00   T: 131   3rd Qu.:31.00  
-##  Max.   :100.00   Max.   :30.00            Max.   :96.00  
+<pre><code>##     objectid        forest_cod     compartmen       subid       
+##  Min.   :  7165   LS09   : 409   22064B :  18   Min.   : 1.000  
+##  1st Qu.: 17070   LS08   : 330   21763L :  15   1st Qu.: 1.000  
+##  Median :118924   KK02   : 311   44292O :  13   Median : 3.000  
+##  Mean   : 81604   OY07   : 244   77707D :  13   Mean   : 4.242  
+##  3rd Qu.:121842   LS06   : 225   22066O :  12   3rd Qu.: 6.000  
+##  Max.   :129869   LS15   : 207   21920N :  11   Max.   :24.000  
+##                   (Other):1670   (Other):3314                   
+##     gis_area           lut         survey_yea     productive    
+##  Min.   : 0.050   CHF    :3151   Min.   :1977   Min.   :  0.00  
+##  1st Qu.: 1.350   MHF    : 114   1st Qu.:2007   1st Qu.: 90.00  
+##  Median : 2.890   UNDEV  :  85   Median :2012   Median : 95.00  
+##  Mean   : 4.666   BLOWN  :  44   Mean   :2010   Mean   : 88.24  
+##  3rd Qu.: 6.213   DEAD   :   2   3rd Qu.:2013   3rd Qu.:100.00  
+##  Max.   :39.980   BAREMG :   0   Max.   :2018   Max.   :100.00  
+##                   (Other):   0                                  
+##      const      mix_type      avg_spacin      estb_stems    
+##  NONE   :3269       :1922   Min.   :0.000   Min.   :   0.0  
+##  ESB    :  46   INT :1249   1st Qu.:0.000   1st Qu.:   0.0  
+##  WIND   :  24   NINT: 225   Median :1.700   Median :   0.0  
+##  SEEDST :  19               Mean   :1.067   Mean   : 369.5  
+##  EXPT   :  12               3rd Qu.:2.000   3rd Qu.:   0.0  
+##  LEGAL  :  12               Max.   :8.900   Max.   :5050.0  
+##  (Other):  14                                               
+##    ba_method          ba_date       dead_fall         dead_stand     
+##  NONE   :1311             :2178   Min.   :  0.000   Min.   :  0.000  
+##  LIDAR  : 841   2013-02-05:  43   1st Qu.:  0.000   1st Qu.:  0.000  
+##  PLOT   : 574   2015-10-01:  39   Median :  0.000   Median :  0.000  
+##  FDCPLT : 327   2016-01-05:  30   Mean   :  1.405   Mean   :  0.894  
+##  OCULAR : 132   2017-07-27:  29   3rd Qu.:  0.000   3rd Qu.:  0.000  
+##  FDC4YR : 103   2013-04-11:  28   Max.   :650.000   Max.   :300.000  
+##  (Other): 108   (Other)   :1049                                      
+##  dead_surve                            comments         spp1     
+##   :   0                                    :3394   SS     :3396  
+##  N:1729     EOFELL 01/05/2018              :   0          :   0  
+##  Y:1667     FDCFEL 21/05/2018              :   0   ALD    :   0  
+##             Realigned to HB boundary       :   1   ASH    :   0  
+##             Realigned to HB boundary after :   1   BE     :   0  
+##                                                    BI     :   0  
+##                                                    (Other):   0  
+##       plantdate1        pyr1         pyrtype1       canopy1      
+##  1988-09-30: 151   Min.   :   0   R      :1884   Min.   :  0.00  
+##  1989-09-30: 127   1st Qu.:1987   E      :1417   1st Qu.: 90.00  
+##  1995-09-30: 123   Median :1995   M      :  28   Median :100.00  
+##  1993-09-30: 114   Mean   :1989   U      :  19   Mean   : 91.89  
+##  1991-09-30: 112   3rd Qu.:2004   T      :  18   3rd Qu.:100.00  
+##  1990-09-30: 110   Max.   :2018   W      :  18   Max.   :100.00  
+##  (Other)   :2659                  (Other):  12                   
+##       yc1        yctype1       age1         mean_dbh1     
+##  Min.   : 0.00    :1071   Min.   : 0.00   Min.   : 0.000  
+##  1st Qu.:16.00   C:   3   1st Qu.:15.00   1st Qu.: 0.000  
+##  Median :18.00   L: 870   Median :24.00   Median : 0.000  
+##  Mean   :18.26   N:1367   Mean   :24.33   Mean   : 6.335  
+##  3rd Qu.:22.00   T:  85   3rd Qu.:32.00   3rd Qu.:16.000  
+##  Max.   :30.00            Max.   :96.00   Max.   :60.000  
 ##                                                           
-##    MEAN_DBH1          STEMS1          HEIGHT1            SPP2     
-##  Min.   : 0.000   Min.   :   0.0   Min.   : 0.000          :2422  
-##  1st Qu.: 0.000   1st Qu.:   0.0   1st Qu.: 0.000   JL     : 550  
-##  Median : 0.000   Median :   0.0   Median : 0.000   LPS    : 392  
-##  Mean   : 7.209   Mean   : 515.7   Mean   : 5.751   BI     : 359  
-##  3rd Qu.:17.000   3rd Qu.:1050.0   3rd Qu.:13.000   ALD    : 215  
-##  Max.   :60.000   Max.   :3280.0   Max.   :55.000   BE     : 130  
-##                                                     (Other): 893  
-##       PLANTDATE2        PYR2         PYRTYPE2       CANOPY2      
-##            :2423   Min.   :   0          :2447   Min.   : 0.000  
-##  2003-09-30: 120   1st Qu.:   0   R      :1162   1st Qu.: 0.000  
-##  2001-09-30: 116   Median :1941   E      : 761   Median : 1.000  
-##  2004-09-30: 103   Mean   :1020   W      : 486   Mean   : 6.765  
-##  2006-09-30: 101   3rd Qu.:2000   T      :  65   3rd Qu.:10.000  
-##  2002-09-30: 100   Max.   :2019   M      :  18   Max.   :60.000  
-##  (Other)   :1998                  (Other):  22                   
-##       YC2         YCTYPE2       AGE2          MEAN_DBH2    
-##  Min.   : 0.000    :4408   Min.   :  0.00   Min.   : 0.00  
-##  1st Qu.: 0.000   C:   1   1st Qu.:  0.00   1st Qu.: 0.00  
-##  Median : 0.000   L:   6   Median :  2.00   Median : 0.00  
-##  Mean   : 1.656   N: 527   Mean   : 12.95   Mean   : 1.96  
-##  3rd Qu.: 0.000   T:  19   3rd Qu.: 20.00   3rd Qu.: 0.00  
-##  Max.   :26.000            Max.   :199.00   Max.   :58.70  
-##                                                            
-##      STEMS2           HEIGHT2            SPP3           PLANTDATE3  
-##  Min.   :   0.00   Min.   : 0.000          :3966             :3967  
-##  1st Qu.:   0.00   1st Qu.: 0.000   BI     : 196   2006-09-30:  69  
-##  Median :   0.00   Median : 0.000   ALD    : 123   2002-09-30:  63  
-##  Mean   :  38.76   Mean   : 1.563   SAL    : 106   2004-09-30:  63  
-##  3rd Qu.:   0.00   3rd Qu.: 0.000   JL     :  90   2003-09-30:  59  
-##  Max.   :3100.00   Max.   :29.000   OB     :  89   2005-09-30:  55  
-##                                     (Other): 391   (Other)   : 685  
-##       PYR3           PYRTYPE3       CANOPY3            YC3         
-##  Min.   :   0.0          :3982   Min.   : 0.000   Min.   : 0.0000  
-##  1st Qu.:   0.0   W      : 326   1st Qu.: 0.000   1st Qu.: 0.0000  
-##  Median :   0.0   E      : 319   Median : 0.000   Median : 0.0000  
-##  Mean   : 399.3   R      : 282   Mean   : 1.169   Mean   : 0.3693  
-##  3rd Qu.:   0.0   M      :  23   3rd Qu.: 0.000   3rd Qu.: 0.0000  
-##  Max.   :2019.0   T      :  22   Max.   :38.000   Max.   :20.0000  
-##                   (Other):   7                                     
-##  YCTYPE3       AGE3           MEAN_DBH3           STEMS3        
-##   :4787   Min.   :  0.000   Min.   : 0.0000   Min.   :   0.000  
-##  C:   0   1st Qu.:  0.000   1st Qu.: 0.0000   1st Qu.:   0.000  
-##  L:   0   Median :  0.000   Median : 0.0000   Median :   0.000  
-##  N: 173   Mean   :  5.228   Mean   : 0.5515   Mean   :   6.205  
-##  T:   1   3rd Qu.:  0.000   3rd Qu.: 0.0000   3rd Qu.:   0.000  
-##           Max.   :169.000   Max.   :50.0000   Max.   :2550.000  
-##                                                                 
-##     HEIGHT3             SPP4           PLANTDATE4        PYR4       
-##  Min.   : 0.0000          :4593             :4593   Min.   :   0.0  
-##  1st Qu.: 0.0000   OB     :  87   2004-09-30:  39   1st Qu.:   0.0  
-##  Median : 0.0000   BI     :  55   2006-09-30:  36   Median :   0.0  
-##  Mean   : 0.4416   SAL    :  41   2003-09-30:  30   Mean   : 147.9  
-##  3rd Qu.: 0.0000   ALD    :  31   2005-09-30:  25   3rd Qu.:   0.0  
-##  Max.   :32.0000   JL     :  24   2002-09-30:  19   Max.   :2018.0  
-##                    (Other): 130   (Other)   : 219                   
-##     PYRTYPE4       CANOPY4            YC4          YCTYPE4 
-##         :4595   Min.   : 0.000   Min.   : 0.0000    :4854  
-##  W      : 158   1st Qu.: 0.000   1st Qu.: 0.0000   N: 107  
-##  R      :  93   Median : 0.000   Median : 0.0000           
-##  E      :  90   Mean   : 0.337   Mean   : 0.1782           
-##  M      :  15   3rd Qu.: 0.000   3rd Qu.: 0.0000           
-##  T      :   6   Max.   :20.000   Max.   :18.0000           
-##  (Other):   4                                              
-##       AGE4           MEAN_DBH4           STEMS4            HEIGHT4       
-##  Min.   :  0.000   Min.   : 0.0000   Min.   :   0.000   Min.   : 0.0000  
-##  1st Qu.:  0.000   1st Qu.: 0.0000   1st Qu.:   0.000   1st Qu.: 0.0000  
-##  Median :  0.000   Median : 0.0000   Median :   0.000   Median : 0.0000  
-##  Mean   :  1.817   Mean   : 0.1371   Mean   :   1.714   Mean   : 0.1142  
-##  3rd Qu.:  0.000   3rd Qu.: 0.0000   3rd Qu.:   0.000   3rd Qu.: 0.0000  
-##  Max.   :119.000   Max.   :29.0000   Max.   :4000.000   Max.   :21.0000  
-##                                                                          
-##       MODIFIEDON     BL_COMMENT        BA1             BA2        
-##  2019-01-11:4961   None   :4395   Min.   : 0.00   Min.   : 0.000  
-##                    BNC16  : 152   1st Qu.: 0.00   1st Qu.: 0.000  
-##                           : 107   Median : 0.00   Median : 0.000  
-##                    BNC17  :  98   Mean   :13.69   Mean   : 0.835  
-##                    BND16  :  88   3rd Qu.:32.31   3rd Qu.: 0.000  
-##                    INB16  :  22   Max.   :97.80   Max.   :94.160  
-##                    (Other):  99                                   
-##       BA3              BA4             SHAPE_STAr         SHAPE_STLe    
-##  Min.   : 0.000   Min.   : 0.00000   Min.   :   537.7   Min.   : 117.5  
-##  1st Qu.: 0.000   1st Qu.: 0.00000   1st Qu.: 12495.6   1st Qu.: 550.5  
-##  Median : 0.000   Median : 0.00000   Median : 27079.3   Median : 851.3  
-##  Mean   : 0.134   Mean   : 0.01619   Mean   : 43172.2   Mean   :1015.0  
-##  3rd Qu.: 0.000   3rd Qu.: 0.00000   3rd Qu.: 56498.9   3rd Qu.:1311.5  
-##  Max.   :51.320   Max.   :41.55000   Max.   :371691.6   Max.   :7630.9  
-##                                                                         
-##  COM_SUB       
-##  Mode:logical  
-##  NA's:4961     
-##                
-##                
-##                
-##                
+##      stems1          height1            ba1             spp2     
+##  Min.   :   0.0   Min.   : 0.000   Min.   : 0.00          :1910  
+##  1st Qu.:   0.0   1st Qu.: 0.000   1st Qu.: 0.00   JL     : 376  
+##  Median :   0.0   Median : 0.000   Median : 0.00   LPS    : 187  
+##  Mean   : 456.2   Mean   : 5.139   Mean   :12.48   BI     : 181  
+##  3rd Qu.: 921.0   3rd Qu.:12.000   3rd Qu.:30.00   ALD    : 158  
+##  Max.   :3160.0   Max.   :55.000   Max.   :99.00   LPN    :  78  
+##                                                    (Other): 506  
+##       plantdate2        pyr2           pyrtype2       canopy2      
+##            :1912   Min.   :   0.0          :1911   Min.   : 0.000  
+##  2003-09-30:  74   1st Qu.:   0.0   R      : 647   1st Qu.: 0.000  
+##  2002-09-30:  63   Median :   0.0   E      : 576   Median : 0.000  
+##  2006-09-30:  63   Mean   : 871.3   W      : 205   Mean   : 6.223  
+##  2005-09-30:  54   3rd Qu.:1995.0   T      :  30   3rd Qu.: 9.000  
+##  1990-09-30:  50   Max.   :2018.0   A      :  10   Max.   :59.000  
+##  (Other)   :1180                    (Other):  17                   
+##       yc2         yctype2       age2          mean_dbh2     
+##  Min.   : 0.000    :3014   Min.   :  0.00   Min.   : 0.000  
+##  1st Qu.: 0.000   C:   1   1st Qu.:  0.00   1st Qu.: 0.000  
+##  Median : 0.000   L:  12   Median :  0.00   Median : 0.000  
+##  Mean   : 1.568   N: 357   Mean   : 10.97   Mean   : 1.214  
+##  3rd Qu.: 0.000   T:  12   3rd Qu.: 17.00   3rd Qu.: 0.000  
+##  Max.   :26.000            Max.   :199.00   Max.   :46.000  
+##                                                             
+##      stems2          height2             ba2              spp3     
+##  Min.   :   0.0   Min.   : 0.0000   Min.   : 0.000          :2851  
+##  1st Qu.:   0.0   1st Qu.: 0.0000   1st Qu.: 0.000   BI     : 106  
+##  Median :   0.0   Median : 0.0000   Median : 0.000   ALD    :  99  
+##  Mean   :  23.3   Mean   : 0.9889   Mean   : 0.664   JL     :  56  
+##  3rd Qu.:   0.0   3rd Qu.: 0.0000   3rd Qu.: 0.000   SAL    :  54  
+##  Max.   :2460.0   Max.   :31.0000   Max.   :98.000   OB     :  50  
+##                                                      (Other): 180  
+##       plantdate3        pyr3           pyrtype3       canopy3      
+##            :2852   Min.   :   0.0          :2851   Min.   : 0.000  
+##  2002-09-30:  43   1st Qu.:   0.0   E      : 221   1st Qu.: 0.000  
+##  2006-09-30:  36   Median :   0.0   R      : 181   Median : 0.000  
+##  2003-09-30:  35   Mean   : 319.4   W      : 113   Mean   : 1.008  
+##  2004-09-30:  32   3rd Qu.:   0.0   M      :  11   3rd Qu.: 0.000  
+##  2005-09-30:  32   Max.   :2018.0   T      :  11   Max.   :38.000  
+##  (Other)   : 366                    (Other):   8                   
+##       yc3          yctype3       age3           mean_dbh3      
+##  Min.   : 0.0000    :3330   Min.   :  0.000   Min.   : 0.0000  
+##  1st Qu.: 0.0000   C:   0   1st Qu.:  0.000   1st Qu.: 0.0000  
+##  Median : 0.0000   L:   0   Median :  0.000   Median : 0.0000  
+##  Mean   : 0.1914   N:  65   Mean   :  3.999   Mean   : 0.3275  
+##  3rd Qu.: 0.0000   T:   1   3rd Qu.:  0.000   3rd Qu.: 0.0000  
+##  Max.   :20.0000            Max.   :119.000   Max.   :50.0000  
+##                                                                
+##      stems3            height3             ba3                spp4     
+##  Min.   :   0.000   Min.   : 0.0000   Min.   : 0.00000          :3226  
+##  1st Qu.:   0.000   1st Qu.: 0.0000   1st Qu.: 0.00000   OB     :  46  
+##  Median :   0.000   Median : 0.0000   Median : 0.00000   BI     :  25  
+##  Mean   :   3.333   Mean   : 0.2567   Mean   : 0.07479   ALD    :  21  
+##  3rd Qu.:   0.000   3rd Qu.: 0.0000   3rd Qu.: 0.00000   SAL    :  15  
+##  Max.   :2550.000   Max.   :28.0000   Max.   :58.00000   JL     :  11  
+##                                                          (Other):  52  
+##       plantdate4        pyr4            pyrtype4       canopy4       
+##            :3226   Min.   :   0.00          :3227   Min.   : 0.0000  
+##  2006-09-30:  18   1st Qu.:   0.00   E      :  64   1st Qu.: 0.0000  
+##  2005-09-30:  17   Median :   0.00   W      :  50   Median : 0.0000  
+##  2003-09-30:  15   Mean   :  99.79   R      :  47   Mean   : 0.2323  
+##  2004-09-30:  14   3rd Qu.:   0.00   M      :   6   3rd Qu.: 0.0000  
+##  2002-09-30:  10   Max.   :2018.00   A      :   1   Max.   :20.0000  
+##  (Other)   :  96                     (Other):   1                    
+##       yc4           yctype4       age4           mean_dbh4       
+##  Min.   : 0.00000    :3364   Min.   :  0.000   Min.   : 0.00000  
+##  1st Qu.: 0.00000   N:  32   1st Qu.:  0.000   1st Qu.: 0.00000  
+##  Median : 0.00000   T:   0   Median :  0.000   Median : 0.00000  
+##  Mean   : 0.07656            Mean   :  1.277   Mean   : 0.07886  
+##  3rd Qu.: 0.00000            3rd Qu.:  0.000   3rd Qu.: 0.00000  
+##  Max.   :18.00000            Max.   :119.000   Max.   :29.00000  
+##                                                                  
+##      stems4            height4              ba4          
+##  Min.   :   0.000   Min.   : 0.00000   Min.   : 0.00000  
+##  1st Qu.:   0.000   1st Qu.: 0.00000   1st Qu.: 0.00000  
+##  Median :   0.000   Median : 0.00000   Median : 0.00000  
+##  Mean   :   2.256   Mean   : 0.06393   Mean   : 0.01885  
+##  3rd Qu.:   0.000   3rd Qu.: 0.00000   3rd Qu.: 0.00000  
+##  Max.   :4000.000   Max.   :22.50000   Max.   :42.00000  
+##                                                          
+##       modifiedon     shape_star         shape_stle     com_sub       
+##  2018-07-03:3396   Min.   :   537.7   Min.   : 117.5   Mode:logical  
+##                    1st Qu.: 13468.9   1st Qu.: 571.5   NA's:3396     
+##                    Median : 28872.3   Median : 886.1                 
+##                    Mean   : 46659.8   Mean   :1058.5                 
+##                    3rd Qu.: 62125.6   3rd Qu.:1386.7                 
+##                    Max.   :399847.0   Max.   :7782.1                 
 ## </code></pre>
 <p>Let’s filter our data frame to retrieve all subs were the first species is Sitka spruce (SS) and where they are older than 30 years of age:</p>
 <pre class="r"><code>scdb %&gt;% 
-  filter(SPP1 == 'SS' &amp; AGE1 &gt; 30) %&gt;% 
+  filter(spp1 == 'SS' &amp; age1 &gt; 30) %&gt;% 
   summary() </code></pre>
-<pre><code>##     OBJECTID        FOREST_COD    COMPARTMEN       SUBID       
-##  Min.   :  7176   WX04   :159   22064B :  11   Min.   : 1.000  
-##  1st Qu.: 14583   CW03   :143   21622B :   9   1st Qu.: 2.000  
-##  Median : 17783   LS08   :123   17306V :   8   Median : 4.000  
-##  Mean   : 63043   LS06   :109   17834B :   8   Mean   : 5.217  
-##  3rd Qu.:121104   KK06   : 88   22071K :   8   3rd Qu.: 7.000  
-##  Max.   :161231   OY07   : 64   79001U :   8   Max.   :24.000  
-##                   (Other):749   (Other):1383                   
-##     GIS_AREA           LUT         SURVEY_YEA     PRODUCTIVE    
-##  Min.   : 0.070   CHF    :1260   Min.   :1975   Min.   :  0.00  
-##  1st Qu.: 0.880   UNDEV  :  81   1st Qu.:2002   1st Qu.: 75.00  
-##  Median : 1.760   MHF    :  49   Median :2010   Median : 90.00  
-##  Mean   : 3.076   BLOWN  :  41   Mean   :2007   Mean   : 79.36  
-##  3rd Qu.: 3.610   BURNED :   2   3rd Qu.:2013   3rd Qu.:100.00  
-##  Max.   :31.500   BAREUP :   1   Max.   :2018   Max.   :100.00  
-##                   (Other):   1                                  
-##      CONST      MIX_TYPE     AVG_SPACIN      ESTB_STEMS      
-##  NONE   :1386       :889   Min.   :0.000   Min.   :   0.000  
-##  SEEDST :  12   INT :469   1st Qu.:0.000   1st Qu.:   0.000  
-##  AMNTY  :   7   NINT: 77   Median :1.700   Median :   0.000  
-##  ESB    :   6   NONE:  0   Mean   :1.148   Mean   :   9.119  
-##  LEGAL  :   6              3rd Qu.:2.000   3rd Qu.:   0.000  
-##  EXPT   :   5              Max.   :4.000   Max.   :2360.000  
-##  (Other):  13                                                
-##    BA_METHOD         BA_DATE      DEAD_FALL         DEAD_STAND     
-##  NONE   :501             :611   Min.   :  0.000   Min.   :  0.000  
-##  PLOT   :461   2017-07-01: 49   1st Qu.:  0.000   1st Qu.:  0.000  
-##  LIDAR  :300   2015-10-01: 29   Median :  0.000   Median :  0.000  
-##  OCULAR : 97   2007-07-01: 18   Mean   :  4.528   Mean   :  5.013  
-##  FIS    : 33   2014-03-18: 17   3rd Qu.:  0.000   3rd Qu.:  0.000  
-##  PAR17  : 12   2016-11-01: 17   Max.   :650.000   Max.   :700.000  
-##  (Other): 31   (Other)   :694                                      
-##  DEAD_SURVE    COMMENTS         SPP1           PLANTDATE1       PYR1     
-##   :  0             :1418   SS     :1435   1988-09-30:199   Min.   :1923  
-##  N:733      Blown  :   2          :   0   1987-09-30:148   1st Qu.:1975  
-##  Y:702      ROW    :   2   ALD    :   0   1982-09-30: 87   Median :1981  
-##             blow   :   1   ASH    :   0   1986-09-30: 81   Mean   :1979  
-##             Blow   :   1   BE     :   0   1983-09-30: 77   3rd Qu.:1986  
-##             BLOW   :   1   BI     :   0   1979-09-30: 67   Max.   :1988  
-##             (Other):  10   (Other):   0   (Other)   :776                 
-##     PYRTYPE1      CANOPY1            YC1        YCTYPE1       AGE1      
-##  E      :934   Min.   :  0.00   Min.   : 0.00    :1047   Min.   :31.00  
-##  R      :444   1st Qu.: 93.00   1st Qu.:12.00   C:  16   1st Qu.:33.00  
-##  U      : 26   Median :100.00   Median :18.00   L: 325   Median :38.00  
-##  M      :  9   Mean   : 92.86   Mean   :15.96   N:  43   Mean   :39.76  
-##  W      :  9   3rd Qu.:100.00   3rd Qu.:22.00   T:   4   3rd Qu.:44.00  
-##  T      :  7   Max.   :100.00   Max.   :30.00            Max.   :96.00  
-##  (Other):  6                                                            
-##    MEAN_DBH1         STEMS1          HEIGHT1           SPP2    
-##  Min.   : 0.00   Min.   :   0.0   Min.   : 0.00          :869  
-##  1st Qu.: 0.00   1st Qu.:   0.0   1st Qu.: 0.00   LPS    :156  
-##  Median :16.50   Median : 466.0   Median :12.50   JL     :101  
-##  Mean   :13.07   Mean   : 582.3   Mean   :10.37   BI     : 75  
-##  3rd Qu.:24.00   3rd Qu.:1005.0   3rd Qu.:19.00   DF     : 34  
-##  Max.   :60.00   Max.   :2580.0   Max.   :55.00   BE     : 27  
-##                                                   (Other):173  
-##       PLANTDATE2       PYR2           PYRTYPE2      CANOPY2      
-##            :869   Min.   :   0.0          :871   Min.   : 0.000  
-##  1988-09-30: 65   1st Qu.:   0.0   E      :337   1st Qu.: 0.000  
-##  1987-09-30: 48   Median :   0.0   R      : 98   Median : 0.000  
-##  1986-09-30: 39   Mean   : 778.9   W      : 89   Mean   : 5.188  
-##  1984-09-30: 32   3rd Qu.:1976.0   T      : 28   3rd Qu.: 5.000  
-##  1983-09-30: 27   Max.   :2018.0   M      :  7   Max.   :50.000  
-##  (Other)   :355                    (Other):  5                   
-##       YC2          YCTYPE2       AGE2          MEAN_DBH2     
-##  Min.   : 0.0000    :1420   Min.   :  0.00   Min.   : 0.000  
-##  1st Qu.: 0.0000   C:   1   1st Qu.:  0.00   1st Qu.: 0.000  
-##  Median : 0.0000   L:   2   Median :  0.00   Median : 0.000  
-##  Mean   : 0.9324   N:  11   Mean   : 17.46   Mean   : 3.971  
-##  3rd Qu.: 0.0000   T:   1   3rd Qu.: 35.00   3rd Qu.: 0.000  
-##  Max.   :24.0000            Max.   :199.00   Max.   :58.700  
-##                                                              
-##      STEMS2           HEIGHT2            SPP3           PLANTDATE3  
-##  Min.   :   0.00   Min.   : 0.000          :1265             :1265  
-##  1st Qu.:   0.00   1st Qu.: 0.000   JL     :  24   1987-09-30:  17  
-##  Median :   0.00   Median : 0.000   BI     :  21   1988-09-30:  17  
-##  Mean   :  50.52   Mean   : 3.051   LPS    :  20   1975-09-30:  11  
-##  3rd Qu.:   0.00   3rd Qu.: 0.000   BE     :  16   1977-09-30:   8  
-##  Max.   :3000.00   Max.   :29.000   ASH    :  11   1982-09-30:   8  
-##                                     (Other):  78   (Other)   : 109  
-##       PYR3           PYRTYPE3       CANOPY3            YC3         
-##  Min.   :   0.0          :1266   Min.   : 0.000   Min.   : 0.0000  
-##  1st Qu.:   0.0   E      :  98   1st Qu.: 0.000   1st Qu.: 0.0000  
-##  Median :   0.0   W      :  37   Median : 0.000   Median : 0.0000  
-##  Mean   : 233.7   R      :  17   Mean   : 0.745   Mean   : 0.1547  
-##  3rd Qu.:   0.0   T      :  13   3rd Qu.: 0.000   3rd Qu.: 0.0000  
-##  Max.   :2000.0   M      :   4   Max.   :34.000   Max.   :16.0000  
-##                   (Other):   0                                     
-##  YCTYPE3       AGE3          MEAN_DBH3          STEMS3        
-##   :1430   Min.   :  0.00   Min.   : 0.000   Min.   :   0.000  
-##  C:   0   1st Qu.:  0.00   1st Qu.: 0.000   1st Qu.:   0.000  
-##  L:   0   Median :  0.00   Median : 0.000   Median :   0.000  
-##  N:   5   Mean   :  5.47   Mean   : 1.163   Mean   :   8.169  
-##  T:   0   3rd Qu.:  0.00   3rd Qu.: 0.000   3rd Qu.:   0.000  
-##           Max.   :169.00   Max.   :50.000   Max.   :1800.000  
-##                                                               
-##     HEIGHT3             SPP4           PLANTDATE4        PYR4        
-##  Min.   : 0.0000          :1386             :1386   Min.   :   0.00  
-##  1st Qu.: 0.0000   JL     :  10   1988-09-30:   6   1st Qu.:   0.00  
-##  Median : 0.0000   OB     :   9   1983-09-30:   5   Median :   0.00  
-##  Mean   : 0.8898   BI     :   6   1987-09-30:   5   Mean   :  67.49  
-##  3rd Qu.: 0.0000   SP     :   5   1972-09-30:   4   3rd Qu.:   0.00  
-##  Max.   :28.0000   OAK    :   4   1975-09-30:   4   Max.   :2000.00  
-##                    (Other):  15   (Other)   :  25                    
-##     PYRTYPE4       CANOPY4             YC4           YCTYPE4 
-##         :1386   Min.   : 0.0000   Min.   : 0.00000    :1432  
-##  E      :  25   1st Qu.: 0.0000   1st Qu.: 0.00000   N:   3  
-##  W      :  13   Median : 0.0000   Median : 0.00000           
-##  R      :   5   Mean   : 0.1575   Mean   : 0.05575           
-##  T      :   5   3rd Qu.: 0.0000   3rd Qu.: 0.00000           
-##  M      :   1   Max.   :20.0000   Max.   :12.00000           
+<pre><code>##     objectid        forest_cod    compartmen      subid       
+##  Min.   :  7176   LS08   :129   22064B : 11   Min.   : 1.000  
+##  1st Qu.: 54296   OY07   :114   75149E : 10   1st Qu.: 2.000  
+##  Median :119188   LS09   :113   22071K :  8   Median : 4.000  
+##  Mean   : 90432   LS06   : 83   75138P :  8   Mean   : 4.755  
+##  3rd Qu.:121900   OY08   : 80   79001U :  8   3rd Qu.: 6.000  
+##  Max.   :129393   TY12   : 70   43993O :  7   Max.   :24.000  
+##                   (Other):449   (Other):986                   
+##     gis_area          lut        survey_yea     productive    
+##  Min.   : 0.10   CHF    :903   Min.   :1977   Min.   :  0.00  
+##  1st Qu.: 0.98   UNDEV  : 62   1st Qu.:2003   1st Qu.: 70.00  
+##  Median : 1.88   MHF    : 38   Median :2013   Median : 90.00  
+##  Mean   : 3.31   BLOWN  : 35   Mean   :2008   Mean   : 77.69  
+##  3rd Qu.: 3.82   BAREMG :  0   3rd Qu.:2013   3rd Qu.:100.00  
+##  Max.   :39.98   BAREPL :  0   Max.   :2018   Max.   :100.00  
+##                  (Other):  0                                  
+##      const     mix_type     avg_spacin      estb_stems         ba_method  
+##  NONE   :996       :694   Min.   :0.000   Min.   :   0.000   LIDAR  :384  
+##  SEEDST : 12   INT :312   1st Qu.:0.000   1st Qu.:   0.000   NONE   :340  
+##  ESB    :  8   NINT: 32   Median :1.700   Median :   0.000   PLOT   :228  
+##  LEGAL  :  6              Mean   :1.141   Mean   :   7.441   OCULAR : 46  
+##  EXPT   :  5              3rd Qu.:2.000   3rd Qu.:   0.000   FIS    : 19  
+##  AMNTY  :  4              Max.   :3.700   Max.   :2460.000   ORTHO  :  7  
+##  (Other):  7                                                 (Other): 14  
+##        ba_date      dead_fall         dead_stand      dead_surve
+##            :554   Min.   :  0.000   Min.   :  0.000    :  0     
+##  2017-07-01: 24   1st Qu.:  0.000   1st Qu.:  0.000   N:524     
+##  2013-02-05: 17   Median :  0.000   Median :  0.000   Y:514     
+##  2015-10-01: 17   Mean   :  2.094   Mean   :  2.353             
+##  2013-04-10: 14   3rd Qu.:  0.000   3rd Qu.:  0.000             
+##  2016-01-05: 14   Max.   :650.000   Max.   :300.000             
+##  (Other)   :398                                                 
+##                             comments         spp1           plantdate1 
+##                                 :1038   SS     :1038   1988-09-30:151  
+##  EOFELL 01/05/2018              :   0          :   0   1987-09-30: 94  
+##  FDCFEL 21/05/2018              :   0   ALD    :   0   1982-09-30: 63  
+##  Realigned to HB boundary       :   0   ASH    :   0   1981-09-30: 61  
+##  Realigned to HB boundary after :   0   BE     :   0   1976-09-30: 59  
+##                                         BI     :   0   1980-09-30: 54  
+##                                         (Other):   0   (Other)   :556  
+##       pyr1         pyrtype1      canopy1            yc1        yctype1
+##  Min.   :1923   E      :751   Min.   :  0.00   Min.   : 0.00    :602  
+##  1st Qu.:1975   R      :258   1st Qu.: 95.00   1st Qu.:12.00   C:  0  
+##  Median :1981   M      : 13   Median :100.00   Median :18.00   L:402  
+##  Mean   :1979   U      :  9   Mean   : 93.35   Mean   :15.94   N: 32  
+##  3rd Qu.:1986   W      :  4   3rd Qu.:100.00   3rd Qu.:22.00   T:  2  
+##  Max.   :1988   T      :  3   Max.   :100.00   Max.   :30.00          
+##                 (Other):  0                                           
+##       age1         mean_dbh1         stems1          height1      
+##  Min.   :31.00   Min.   : 0.00   Min.   :   0.0   Min.   : 0.000  
+##  1st Qu.:33.00   1st Qu.: 0.00   1st Qu.:   0.0   1st Qu.: 0.000  
+##  Median :38.00   Median : 0.00   Median :   0.0   Median : 0.000  
+##  Mean   :40.14   Mean   :10.24   Mean   : 464.9   Mean   : 8.397  
+##  3rd Qu.:44.00   3rd Qu.:22.00   3rd Qu.: 923.8   3rd Qu.:18.000  
+##  Max.   :96.00   Max.   :60.00   Max.   :2390.0   Max.   :55.000  
+##                                                                   
+##       ba1             spp2          plantdate2       pyr2     
+##  Min.   : 0.00          :687             :687   Min.   :   0  
+##  1st Qu.: 0.00   BI     : 75   1988-09-30: 29   1st Qu.:   0  
+##  Median : 0.00   LPS    : 66   1981-09-30: 22   Median :   0  
+##  Mean   :18.41   JL     : 61   1983-09-30: 21   Mean   : 668  
+##  3rd Qu.:39.00   ASH    : 23   1986-09-30: 21   3rd Qu.:1974  
+##  Max.   :99.00   NS     : 21   1980-09-30: 19   Max.   :2006  
+##                  (Other):105   (Other)   :239                 
+##     pyrtype2      canopy2            yc2          yctype2 
+##         :687   Min.   : 0.000   Min.   : 0.0000    :1022  
+##  E      :248   1st Qu.: 0.000   1st Qu.: 0.0000   C:   0  
+##  R      : 48   Median : 0.000   Median : 0.0000   L:   9  
+##  W      : 40   Mean   : 4.635   Mean   : 0.8285   N:   6  
+##  T      : 11   3rd Qu.: 5.000   3rd Qu.: 0.0000   T:   1  
+##  U      :  3   Max.   :50.000   Max.   :24.0000           
+##  (Other):  1                                              
+##       age2          mean_dbh2          stems2           height2      
+##  Min.   :  0.00   Min.   : 0.000   Min.   :   0.00   Min.   : 0.000  
+##  1st Qu.:  0.00   1st Qu.: 0.000   1st Qu.:   0.00   1st Qu.: 0.000  
+##  Median :  0.00   Median : 0.000   Median :   0.00   Median : 0.000  
+##  Mean   : 14.71   Mean   : 1.946   Mean   :  22.46   Mean   : 1.561  
+##  3rd Qu.: 35.00   3rd Qu.: 0.000   3rd Qu.:   0.00   3rd Qu.: 0.000  
+##  Max.   :199.00   Max.   :46.000   Max.   :1400.00   Max.   :31.000  
+##                                                                      
+##       ba2              spp3          plantdate3       pyr3       
+##  Min.   : 0.000          :936             :936   Min.   :   0.0  
+##  1st Qu.: 0.000   BI     : 20   1988-09-30: 13   1st Qu.:   0.0  
+##  Median : 0.000   JL     : 10   1982-09-30:  8   Median :   0.0  
+##  Mean   : 1.045   LPS    :  9   1976-09-30:  5   Mean   : 193.9  
+##  3rd Qu.: 0.000   NS     :  9   1972-09-30:  4   3rd Qu.:   0.0  
+##  Max.   :94.000   SAL    :  9   1975-09-30:  4   Max.   :2001.0  
+##                   (Other): 45   (Other)   : 68                   
+##     pyrtype3      canopy3             yc3           yctype3 
+##         :936   Min.   : 0.0000   Min.   : 0.00000    :1035  
+##  E      : 69   1st Qu.: 0.0000   1st Qu.: 0.00000   C:   0  
+##  W      : 15   Median : 0.0000   Median : 0.00000   L:   0  
+##  T      :  8   Mean   : 0.6927   Mean   : 0.05395   N:   3  
+##  R      :  6   3rd Qu.: 0.0000   3rd Qu.: 0.00000   T:   0  
+##  M      :  4   Max.   :29.0000   Max.   :12.00000           
+##  (Other):  0                                                
+##       age3           mean_dbh3           stems3           height3      
+##  Min.   :  0.000   Min.   : 0.0000   Min.   :  0.000   Min.   : 0.000  
+##  1st Qu.:  0.000   1st Qu.: 0.0000   1st Qu.:  0.000   1st Qu.: 0.000  
+##  Median :  0.000   Median : 0.0000   Median :  0.000   Median : 0.000  
+##  Mean   :  4.465   Mean   : 0.6639   Mean   :  3.125   Mean   : 0.443  
+##  3rd Qu.:  0.000   3rd Qu.: 0.0000   3rd Qu.:  0.000   3rd Qu.: 0.000  
+##  Max.   :119.000   Max.   :50.0000   Max.   :950.000   Max.   :28.000  
+##                                                                        
+##       ba3               spp4           plantdate4        pyr4        
+##  Min.   : 0.0000          :1007             :1007   Min.   :   0.00  
+##  1st Qu.: 0.0000   OB     :   6   1972-09-30:   4   1st Qu.:   0.00  
+##  Median : 0.0000   JL     :   5   1976-09-30:   3   Median :   0.00  
+##  Mean   : 0.1426   ASH    :   3   1988-09-30:   3   Mean   :  58.83  
+##  3rd Qu.: 0.0000   BE     :   3   1970-09-30:   2   3rd Qu.:   0.00  
+##  Max.   :58.0000   BI     :   3   1977-09-30:   2   Max.   :2000.00  
+##                    (Other):  11   (Other)   :  17                    
+##     pyrtype4       canopy4             yc4           yctype4 
+##         :1007   Min.   : 0.0000   Min.   : 0.00000    :1037  
+##  E      :  21   1st Qu.: 0.0000   1st Qu.: 0.00000   N:   1  
+##  W      :   6   Median : 0.0000   Median : 0.00000   T:   0  
+##  R      :   3   Mean   : 0.1647   Mean   : 0.01541           
+##  M      :   1   3rd Qu.: 0.0000   3rd Qu.: 0.00000           
+##  A      :   0   Max.   :20.0000   Max.   :12.00000           
 ##  (Other):   0                                                
-##       AGE4           MEAN_DBH4           STEMS4            HEIGHT4       
+##       age4           mean_dbh4           stems4            height4       
 ##  Min.   :  0.000   Min.   : 0.0000   Min.   :  0.0000   Min.   : 0.0000  
 ##  1st Qu.:  0.000   1st Qu.: 0.0000   1st Qu.:  0.0000   1st Qu.: 0.0000  
 ##  Median :  0.000   Median : 0.0000   Median :  0.0000   Median : 0.0000  
-##  Mean   :  1.449   Mean   : 0.3569   Mean   :  0.5505   Mean   : 0.2686  
+##  Mean   :  1.463   Mean   : 0.2125   Mean   :  0.4884   Mean   : 0.1458  
 ##  3rd Qu.:  0.000   3rd Qu.: 0.0000   3rd Qu.:  0.0000   3rd Qu.: 0.0000  
-##  Max.   :119.000   Max.   :29.0000   Max.   :180.0000   Max.   :21.0000  
+##  Max.   :119.000   Max.   :29.0000   Max.   :180.0000   Max.   :22.5000  
 ##                                                                          
-##       MODIFIEDON     BL_COMMENT        BA1             BA2        
-##  2019-01-11:1435   None   :1267   Min.   : 0.00   Min.   : 0.000  
-##                           :  39   1st Qu.: 0.00   1st Qu.: 0.000  
-##                    BNC17  :  38   Median :24.01   Median : 0.000  
-##                    BNC16  :  28   Mean   :22.24   Mean   : 1.637  
-##                    BND16  :  18   3rd Qu.:40.01   3rd Qu.: 0.000  
-##                    YCUP17 :  12   Max.   :97.80   Max.   :94.160  
-##                    (Other):  33                                   
-##       BA3               BA4            SHAPE_STAr         SHAPE_STLe    
-##  Min.   : 0.0000   Min.   :0.00000   Min.   :   718.7   Min.   : 122.3  
-##  1st Qu.: 0.0000   1st Qu.:0.00000   1st Qu.:  8839.9   1st Qu.: 467.3  
-##  Median : 0.0000   Median :0.00000   Median : 17570.1   Median : 690.5  
-##  Mean   : 0.2922   Mean   :0.01311   Mean   : 30763.8   Mean   : 865.9  
-##  3rd Qu.: 0.0000   3rd Qu.:0.00000   3rd Qu.: 36077.4   3rd Qu.:1077.1  
-##  Max.   :51.3200   Max.   :2.41000   Max.   :315024.3   Max.   :7630.9  
-##                                                                         
-##  COM_SUB       
+##       ba4              modifiedon     shape_star         shape_stle    
+##  Min.   :0.0000   2018-07-03:1038   Min.   :   997.8   Min.   : 134.6  
+##  1st Qu.:0.0000                     1st Qu.:  9754.7   1st Qu.: 492.6  
+##  Median :0.0000                     Median : 18772.6   Median : 721.1  
+##  Mean   :0.0106                     Mean   : 33096.1   Mean   : 902.1  
+##  3rd Qu.:0.0000                     3rd Qu.: 38206.0   3rd Qu.:1114.2  
+##  Max.   :2.0000                     Max.   :399847.0   Max.   :7782.1  
+##                                                                        
+##  com_sub       
 ##  Mode:logical  
-##  NA's:1435     
+##  NA's:1038     
 ##                
 ##                
 ##                
@@ -983,20 +1012,20 @@ names(scdb_subset_species)</code></pre>
 <p>Order columns using the <em>arrange()</em> function.</p>
 <p>Let’s select some fields from our data frame and order them by area.</p>
 </div>
-</div>
-<div id="arrange-function---to-sort-your-data" class="section level2">
-<h2>‘arrange’ function - to sort your data</h2>
+<div id="arrange-function---to-sort-your-data" class="section level3">
+<h3>‘arrange’ function - to sort your data</h3>
 <pre class="r"><code>scdb %&gt;% 
-  select(COMPARTMEN, SUBID, GIS_AREA) %&gt;%
-  arrange(GIS_AREA) %&gt;% 
+  select(compartmen, subid, gis_area) %&gt;%
+  arrange(gis_area) %&gt;% 
   head()</code></pre>
-<pre><code>##   COMPARTMEN SUBID GIS_AREA
-## 1     77505E     3     0.01
+<pre><code>##   compartmen subid gis_area
+## 1     77304A     4     0.03
 ## 2     21165U    12     0.04
 ## 3     77313W     3     0.05
-## 4     15500H     4     0.06
-## 5     21602N     7     0.07
-## 6     17311R     8     0.08</code></pre>
+## 4     77243L     2     0.05
+## 5     21272W     6     0.08
+## 6     77809J    15     0.09</code></pre>
+</div>
 <div id="combining-select-and-filter" class="section level3">
 <h3>Combining select() and filter()</h3>
 <p><strong>Exercise</strong>: Using the SCDB, select all subs where the first species is Lodgepole and that were planted before 2010 and summarise the area</p>
